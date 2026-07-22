@@ -1,0 +1,18 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: 💬 Suggest an improvement or report a bug
+    url: https://forms.gle/kdQHmxBqzvoMGsX96
+    about: >
+      Use this form to report bugs, suggest features, or ask questions.
+      Responses go directly to the Shodh development team.
+
+  - name: 🔒 Security or privacy vulnerability
+    url: https://github.com/<OWNER>/<REPO>/security/advisories/new
+    about: >
+      Report security issues privately. Do not post in a public issue.
+      See SECURITY.md for details.
+
+  - name: 📖 User manual
+    url: https://github.com/<OWNER>/<REPO>/blob/main/docs/USER_MANUAL.md
+    about: Step-by-step documentation for every feature in Shodh.

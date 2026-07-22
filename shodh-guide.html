@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shodh 1.0.0 — How to run a review</title>
+<!--
+  Shodh · शोध — Guided walkthrough
+  Version 1.0.0
+  SPDX-License-Identifier: Apache-2.0
+
+  A self-contained, offline walkthrough of the Shodh review workflow.
+  No network, no dependencies. Open it in any browser.
+-->
+<style>
+:root{
+  --paper:#F1F2EC; --card:#FFFFFF; --ink:#22261F; --muted:#5A6052;
+  --rule:#D6D8CC; --rule-2:#E7E8E0; --stamp:#2F4E9E; --stamp-soft:#EAEEF8;
+  --inc:#2E6B3E; --inc-soft:#E7F0E9; --exc:#A63B2F; --exc-soft:#F6E9E6;
+  --may:#8A6A1F; --may-soft:#F4EEDF;
+  --serif:"Charter","Iowan Old Style","Georgia",serif;
+  --ui:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"SFMono-Regular","Menlo","Consolas",monospace;
+  --r:3px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--ink); font-family:var(--ui);
+  font-size:15px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+kbd{
+  font-family:var(--mono); font-size:.85em; border:1px solid var(--rule);
+  border-bottom-width:2px; border-radius:var(--r); padding:1px 5px;
+  background:var(--card); white-space:nowrap;
+}
+
+/* ---------- masthead ---------- */
+.masthead{
+  display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+  padding:22px 20px 14px; max-width:1180px; margin:0 auto;
+}
+.logo{font-family:var(--serif); font-size:30px; font-weight:600; letter-spacing:-.5px; line-height:1}
+.logo .dot{color:var(--stamp)}
+.tagline{font-family:var(--mono); font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:var(--muted)}
+.verbadge{
+  font-family:var(--mono); font-size:10px; color:var(--stamp); background:var(--stamp-soft);
+  border:1px solid var(--rule); border-radius:999px; padding:2px 8px; white-space:nowrap;
+}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1180px; margin:0 auto; padding:0 20px 80px}
+.intro{
+  border-top:1px solid var(--rule); border-bottom:1px solid var(--rule);
+  padding:26px 0 24px; margin-bottom:26px;
+}
+.intro h1{
+  font-family:var(--serif); font-size:clamp(28px,4vw,42px); font-weight:600;
+  line-height:1.15; margin:0 0 12px; letter-spacing:-.4px;
+}
+.intro p{margin:0; max-width:64ch; color:var(--muted); font-size:16px}
+
+.stage{display:grid; grid-template-columns:minmax(0,1fr) 260px; gap:26px; align-items:start}
+@media(max-width:900px){ .stage{grid-template-columns:minmax(0,1fr)} }
+
+/* ---------- player ---------- */
+.player{
+  background:var(--card); border:1px solid var(--rule); border-radius:var(--r);
+  box-shadow:0 1px 0 var(--rule),0 2px 10px rgba(34,38,31,.05); overflow:hidden;
+}
+.screen{position:relative; min-height:430px; padding:26px 28px 22px}
+@media(max-width:600px){ .screen{padding:20px 18px 18px; min-height:400px} }
+
+.eyebrow{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--stamp); margin-bottom:10px; display:flex; align-items:center; gap:9px;
+}
+.eyebrow .n{
+  background:var(--stamp); color:#fff; border-radius:2px; padding:1px 6px;
+  font-size:10px; letter-spacing:1px;
+}
+.screen h2{
+  font-family:var(--serif); font-size:26px; font-weight:600; margin:0 0 8px; letter-spacing:-.2px;
+}
+.screen .lede{color:var(--muted); margin:0 0 18px; max-width:58ch; font-size:14.5px}
+
+/* fade-in for each chapter */
+.chapter{display:none}
+.chapter.on{display:block; animation:fade .45s ease both}
+@keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+
+/* ---------- mock UI ---------- */
+.mock{
+  border:1px solid var(--rule-2); border-radius:var(--r); background:var(--paper);
+  padding:14px; font-size:13px;
+}
+.mock-bar{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px}
+.mock-tab{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:1.2px; text-transform:uppercase;
+  padding:4px 8px; border:1px solid transparent; border-radius:2px; color:var(--muted);
+}
+.mock-tab.on{background:var(--card); border-color:var(--rule); color:var(--ink); font-weight:600}
+.rec{
+  background:var(--card); border:1px solid var(--rule); border-radius:var(--r);
+  padding:12px 14px; margin-bottom:8px;
+}
+.rec-t{font-family:var(--serif); font-size:15px; line-height:1.35; margin-bottom:4px}
+.rec-m{font-size:11.5px; color:var(--muted); font-family:var(--mono)}
+.pill{
+  display:inline-block; font-family:var(--mono); font-size:10px; letter-spacing:.6px;
+  padding:2px 7px; border-radius:999px; text-transform:uppercase;
+}
+.pill.inc{background:var(--inc-soft); color:var(--inc)}
+.pill.exc{background:var(--exc-soft); color:var(--exc)}
+.pill.may{background:var(--may-soft); color:var(--may)}
+.pill.dup{background:var(--stamp-soft); color:var(--stamp)}
+.keyrow{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; align-items:center}
+.act{
+  flex:1; min-width:96px; text-align:center; padding:9px 8px; border-radius:var(--r);
+  border:1px solid var(--rule); background:var(--card); font-size:12.5px; font-weight:600;
+}
+.act.inc{border-color:var(--inc); color:var(--inc)}
+.act.exc{border-color:var(--exc); color:var(--exc)}
+.act.may{border-color:var(--may); color:var(--may)}
+.act .k{display:block; font-family:var(--mono); font-size:10px; font-weight:400; color:var(--muted); margin-top:2px}
+
+.note{
+  border-left:2px solid var(--stamp); background:var(--stamp-soft);
+  padding:10px 14px; margin-top:16px; font-size:13px; border-radius:0 var(--r) var(--r) 0;
+}
+.note b{font-weight:600}
+.warn{border-left-color:var(--may); background:var(--may-soft)}
+
+.two{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+@media(max-width:600px){ .two{grid-template-columns:1fr} }
+
+/* ---------- transport ---------- */
+.transport{
+  border-top:1px solid var(--rule); padding:12px 16px;
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:var(--card);
+}
+.btn{
+  font-family:var(--ui); font-size:13px; padding:7px 14px; border-radius:var(--r);
+  border:1px solid var(--rule); background:var(--card); color:var(--ink); cursor:pointer;
+}
+.btn:hover{border-color:var(--stamp); color:var(--stamp)}
+.btn:focus-visible{outline:2px solid var(--stamp); outline-offset:2px}
+.btn.primary{background:var(--stamp); border-color:var(--stamp); color:#fff; font-weight:600}
+.btn.primary:hover{opacity:.9; color:#fff}
+.btn[disabled]{opacity:.4; cursor:default}
+.btn[disabled]:hover{border-color:var(--rule); color:var(--ink)}
+.counter{font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-left:auto}
+
+.progress{height:3px; background:var(--rule-2); position:relative; overflow:hidden}
+.progress i{
+  position:absolute; inset:0 auto 0 0; background:var(--stamp); width:0;
+  transition:width .25s linear;
+}
+
+/* ---------- sidebar: chapters + PRISMA ---------- */
+.side{display:flex; flex-direction:column; gap:18px; position:sticky; top:18px}
+@media(max-width:900px){ .side{position:static} }
+.side h3{
+  font-family:var(--mono); font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--muted); margin:0 0 9px; font-weight:400;
+}
+.chaplist{list-style:none; margin:0; padding:0; border-top:1px solid var(--rule)}
+.chaplist li{border-bottom:1px solid var(--rule-2)}
+.chaplist button{
+  width:100%; text-align:left; background:none; border:0; padding:8px 4px; cursor:pointer;
+  font-family:var(--ui); font-size:13px; color:var(--muted); display:flex; gap:9px; align-items:baseline;
+}
+.chaplist button:hover{color:var(--stamp)}
+.chaplist button:focus-visible{outline:2px solid var(--stamp); outline-offset:-2px}
+.chaplist li.on button{color:var(--ink); font-weight:600}
+.chaplist li.on button .num{color:var(--stamp)}
+.chaplist .num{font-family:var(--mono); font-size:10.5px; color:var(--rule); min-width:16px}
+
+/* signature element: live PRISMA funnel */
+.funnel{
+  background:var(--card); border:1px solid var(--rule); border-radius:var(--r); padding:14px;
+}
+.fstep{margin-bottom:9px}
+.fstep:last-child{margin-bottom:0}
+.flabel{
+  display:flex; justify-content:space-between; align-items:baseline; gap:8px;
+  font-size:11.5px; color:var(--muted); margin-bottom:3px;
+}
+.flabel b{font-family:var(--mono); font-size:12.5px; color:var(--ink); font-weight:600}
+.fbar{height:6px; background:var(--rule-2); border-radius:999px; overflow:hidden}
+.fbar i{
+  display:block; height:100%; width:0; background:var(--stamp); border-radius:999px;
+  transition:width .6s cubic-bezier(.4,0,.2,1);
+}
+.fstep.excluded .fbar i{background:var(--exc)}
+.fstep.final .fbar i{background:var(--inc)}
+.fnote{font-size:11px; color:var(--muted); margin-top:10px; line-height:1.45}
+
+footer{
+  max-width:1180px; margin:0 auto; padding:24px 20px 60px; border-top:1px solid var(--rule);
+  color:var(--muted); font-size:12.5px; line-height:1.6;
+}
+footer code{font-family:var(--mono); font-size:.92em}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation:none !important; transition:none !important}
+}
+@media print{
+  .transport,.side,.progress{display:none}
+  .chapter{display:block !important; page-break-inside:avoid; margin-bottom:30px}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <span class="logo">Shodh<span class="dot">.</span></span>
+  <span class="tagline">शोध · guided walkthrough</span>
+  <span class="verbadge">v1.0.0</span>
+</header>
+
+<div class="wrap">
+
+  <div class="intro">
+    <h1>How to run a review in Shodh</h1>
+    <p>Eight steps, from an empty desk to an exported PRISMA diagram. The walkthrough plays on its own — pause any time, or jump to the step you need. Everything shown here happens on your own machine; nothing is uploaded.</p>
+  </div>
+
+  <div class="stage">
+
+    <!-- ============ PLAYER ============ -->
+    <div class="player">
+      <div class="progress"><i id="bar"></i></div>
+      <div class="screen" id="screen">
+
+        <!-- 1 -->
+        <section class="chapter on" data-title="Create the review" data-dur="7000">
+          <div class="eyebrow"><span class="n">01</span> Desk</div>
+          <h2>Create the review</h2>
+          <p class="lede">Give the review a title and state the question it answers. Your name goes on every decision you record, so the audit trail says who did what.</p>
+          <div class="mock">
+            <div class="mock-bar">
+              <span class="mock-tab on">Desk</span><span class="mock-tab">Import</span>
+              <span class="mock-tab">Duplicates</span><span class="mock-tab">Stage 1</span>
+              <span class="mock-tab">Conflicts</span><span class="mock-tab">Stage 2</span>
+              <span class="mock-tab">Ask</span><span class="mock-tab">Export</span>
+            </div>
+            <div class="rec">
+              <div class="rec-m" style="margin-bottom:5px">REVIEW TITLE</div>
+              <div class="rec-t" style="color:var(--muted)">e.g. Title of your research topic</div>
+            </div>
+            <div class="rec">
+              <div class="rec-m" style="margin-bottom:5px">RESEARCH QUESTION</div>
+              <div class="rec-t" style="color:var(--muted)">e.g. What evidence are you trying to identify or compare?</div>
+            </div>
+            <div class="rec">
+              <div class="rec-m" style="margin-bottom:5px">REVIEWER NAME</div>
+              <div class="rec-t" style="color:var(--muted)">e.g. Your name — recorded on every decision you make</div>
+            </div>
+          </div>
+          <div class="note">You can run several reviews side by side. Each keeps its own records, decisions, and PDFs.</div>
+        </section>
+
+        <!-- 2 -->
+        <section class="chapter" data-title="Import your search results" data-dur="8000">
+          <div class="eyebrow"><span class="n">02</span> Import</div>
+          <h2>Import your search results</h2>
+          <p class="lede">Export your database searches as RIS, BibTeX, or CSV and drop the files in. Scopus, Web of Science, PubMed, Zotero, Mendeley, and EndNote all produce at least one of these.</p>
+          <div class="mock">
+            <div class="two">
+              <div class="rec"><div class="rec-t">RIS · .ris</div><div class="rec-m">EndNote · Zotero · PubMed</div></div>
+              <div class="rec"><div class="rec-t">BibTeX · .bib</div><div class="rec-m">Zotero · JabRef · LaTeX</div></div>
+              <div class="rec"><div class="rec-t">CSV · .csv</div><div class="rec-m">Scopus · Web of Science</div></div>
+              <div class="rec"><div class="rec-t">PDF · .pdf</div><div class="rec-m">Matched to records by title</div></div>
+            </div>
+          </div>
+          <div class="note">Drop PDFs in too. Text is extracted at import so it can be searched later in Ask. <b>Scanned PDFs have no text layer</b> — Shodh does not run OCR, so run those through an OCR tool first if you need them searchable.</div>
+        </section>
+
+        <!-- 3 -->
+        <section class="chapter" data-title="Remove duplicates" data-dur="8000">
+          <div class="eyebrow"><span class="n">03</span> Duplicates</div>
+          <h2>Remove duplicates</h2>
+          <p class="lede">Searching several databases returns the same paper more than once. Shodh finds candidates in three passes: identical DOI, identical title, then close-but-not-identical title.</p>
+          <div class="mock">
+            <div class="rec">
+              <span class="pill dup">Exact DOI</span>
+              <div class="rec-t" style="margin-top:7px">Prediction of flank wear in dry turning using force signals</div>
+              <div class="rec-m">10.0000/example.1 · matched 2 records</div>
+            </div>
+            <div class="rec">
+              <span class="pill dup">Fuzzy title · 94%</span>
+              <div class="rec-t" style="margin-top:7px">Neural network modelling of surface roughness in end milling</div>
+              <div class="rec-m">American / British spelling variant</div>
+            </div>
+          </div>
+          <div class="note warn"><b>Check before you remove.</b> Fuzzy matching is a heuristic — it will miss some duplicates and flag some records that are not duplicates. Shodh never deletes anything on its own; you confirm each one, and every removal is written to the decision log.</div>
+        </section>
+
+        <!-- 4 -->
+        <section class="chapter" data-title="Stage 1 — Title screening" data-dur="8500">
+          <div class="eyebrow"><span class="n">04</span> Stage 1</div>
+          <h2>Title screening</h2>
+          <p class="lede">Work through the records on title, authors, and journal alone. One keystroke per decision. Anything you include moves forward to full text.</p>
+          <div class="mock">
+            <div class="rec">
+              <div class="rec-m">record · 2021 · screening as R. Sharma</div>
+              <div class="rec-t" style="margin-top:6px">Prediction of flank wear in dry turning of stainless steel using cutting force signals</div>
+              <div class="rec-m" style="margin-top:4px">Doe, J.; Roe, A. · Journal of Manufacturing Science · 2021</div>
+            </div>
+            <div class="keyrow">
+              <div class="act inc">Include<span class="k">→ or I</span></div>
+              <div class="act exc">Exclude<span class="k">← or E</span></div>
+              <div class="act may">Maybe<span class="k">M</span></div>
+            </div>
+          </div>
+          <div class="note">Pressed the wrong key? <kbd>U</kbd> undoes the last decision. Abstracts deliberately stay hidden until Stage 2 — this keeps the first pass fast and consistent.</div>
+        </section>
+
+        <!-- 5 -->
+        <section class="chapter" data-title="Resolve conflicts" data-dur="7500">
+          <div class="eyebrow"><span class="n">05</span> Conflicts</div>
+          <h2>Resolve conflicts</h2>
+          <p class="lede">When two reviewers screen the same records, disagreements collect here for adjudication. Each reviewer's vote stays hidden from the other until the record is resolved.</p>
+          <div class="mock">
+            <div class="rec">
+              <div class="rec-t">Wavelet analysis of accelerometer signals for chatter detection</div>
+              <div class="rec-m" style="margin-top:8px">
+                R. Sharma <span class="pill inc">Include</span>
+                &nbsp;&nbsp;A. Kovács <span class="pill exc">Exclude</span>
+              </div>
+              <div class="keyrow">
+                <div class="act inc">Include</div>
+                <div class="act exc">Exclude</div>
+              </div>
+            </div>
+          </div>
+          <div class="note warn"><b>Independence is by convention, not enforced.</b> Shodh has no server, so it cannot stop two reviewers sharing one browser profile. Screen on separate machines or separate profiles, and describe your procedure in your methods section.</div>
+        </section>
+
+        <!-- 6 -->
+        <section class="chapter" data-title="Stage 2 — Full-text screening" data-dur="8500">
+          <div class="eyebrow"><span class="n">06</span> Stage 2</div>
+          <h2>Full-text screening</h2>
+          <p class="lede">Records that passed Stage 1 arrive here with their abstracts and any attached PDF. Decide one by one, or write a keyword rule and apply it to the whole matched set at once.</p>
+          <div class="mock">
+            <div class="two">
+              <div>
+                <div class="rec">
+                  <div class="rec-t">Comparison of stamping and hydroforming for bipolar plates</div>
+                  <div class="rec-m" style="margin-top:5px">Wells, P. · 2022 · PDF attached</div>
+                  <div style="font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5">Stamping, hydroforming, and machining routes are compared on cost, cycle time, and channel accuracy…</div>
+                </div>
+              </div>
+              <div>
+                <div class="rec">
+                  <div class="rec-m" style="margin-bottom:6px">KEYWORD RULE</div>
+                  <div style="font-family:var(--mono);font-size:12px">hydroforming OR stamping</div>
+                  <div class="rec-m" style="margin-top:8px">matches 14 records</div>
+                </div>
+                <div class="keyrow">
+                  <div class="act inc">Include set</div>
+                  <div class="act exc">Exclude set</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="note">Every exclusion at this stage needs a PRISMA reason — wrong population, wrong outcome, and so on. That is what fills the exclusion boxes in your flow diagram.</div>
+        </section>
+
+        <!-- 7 -->
+        <section class="chapter" data-title="Search your corpus" data-dur="9500">
+          <div class="eyebrow"><span class="n">07</span> Ask</div>
+          <h2>Search what you have collected</h2>
+          <p class="lede">Ask searches the abstracts and extracted PDF text of the records <em>you</em> imported, and returns the passages that match, ranked by relevance.</p>
+          <div class="mock">
+            <div class="rec">
+              <div class="rec-m" style="margin-bottom:6px">QUERY</div>
+              <div style="font-family:var(--serif);font-size:15px">How can we help the environment with sustainable manufacturing?</div>
+            </div>
+            <div class="rec">
+              <div class="rec-m">rank 1 · book · 2024</div>
+              <div class="rec-t" style="margin-top:5px">Sustainability in Smart Manufacturing: Trends, Scope, and Challenges</div>
+              <div class="rec-m" style="margin-top:4px">Shah, S.; Nautiyal, H.; Gugliani, G.; Kumar, A.; Namboodri, T.; Singla, Y. K. (Eds.) · CRC Press · doi 10.1201/9781003467496</div>
+              <div style="font-size:12.5px;margin-top:7px;line-height:1.5">…covers 3D printing and rapid prototyping for <b style="background:var(--may-soft)">low-carbon</b> development, and the role of AI in digital <b style="background:var(--may-soft)">manufacturing</b>…</div>
+            </div>
+            <div class="rec">
+              <div class="rec-m">rank 2 · chapter · pp. 1–18</div>
+              <div class="rec-t" style="margin-top:5px">Globalization and International Issues in Sustainable Manufacturing</div>
+              <div class="rec-m" style="margin-top:4px">Kumar, A.; Singla, Y. K.; Namboodri, T. · doi 10.1201/9781003467496-1</div>
+              <div style="font-size:12.5px;margin-top:7px;line-height:1.5">…the interaction between global supply chains and <b style="background:var(--may-soft)">sustainable manufacturing</b> practice…</div>
+            </div>
+          </div>
+          <div class="note warn"><b>This is keyword search, not AI comprehension.</b> Ask ranks passages by BM25, a classical word-matching method — it will miss relevant text that uses different vocabulary. If you install Ollama separately, retrieved passages can optionally be sent to a local model for a draft synthesis; that stays on your machine, and anything it writes must be checked against the sources.</div>
+          <p style="font-size:11.5px;color:var(--muted);margin:10px 0 0">Records shown are real and correctly cited; the highlighted excerpts are illustrative of how results are displayed, not verbatim quotations.</p>
+        </section>
+
+        <!-- 8 -->
+        <section class="chapter" data-title="Export everything" data-dur="9000">
+          <div class="eyebrow"><span class="n">08</span> Export</div>
+          <h2>Export everything</h2>
+          <p class="lede">Your included set for a reference manager, the review artefacts, the PRISMA diagram, and a full backup — all generated locally.</p>
+          <div class="mock">
+            <div class="two">
+              <div class="rec"><div class="rec-t">Included studies</div><div class="rec-m">BibTeX · RIS · CSV</div></div>
+              <div class="rec"><div class="rec-t">Notes</div><div class="rec-m">With title, authors, journal &amp; DOI</div></div>
+              <div class="rec"><div class="rec-t">Decision log</div><div class="rec-m">Every vote · full audit trail</div></div>
+              <div class="rec"><div class="rec-t">PRISMA diagram</div><div class="rec-m">SVG &amp; PNG</div></div>
+              <div class="rec"><div class="rec-t">Full project</div><div class="rec-m">JSON backup you can re-import</div></div>
+              <div class="rec"><div class="rec-t">Cite Shodh</div><div class="rec-m">BibTeX · RIS</div></div>
+            </div>
+          </div>
+          <div class="note warn"><b>Two things to do before you publish.</b> Verify the PRISMA counts against your own records — they reflect what you did in the app, but the numbers in your paper are your responsibility. And export a JSON backup regularly: your review lives in this browser profile only, so clearing browser data or switching machines without a backup loses it.</div>
+        </section>
+
+      </div>
+
+      <div class="transport">
+        <button class="btn primary" id="play" aria-label="Play or pause the walkthrough">⏸ Pause</button>
+        <button class="btn" id="prev" aria-label="Previous step">← Back</button>
+        <button class="btn" id="next" aria-label="Next step">Next →</button>
+        <span class="counter" id="count">01 / 08</span>
+      </div>
+    </div>
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="side">
+      <div>
+        <h3>Steps</h3>
+        <ul class="chaplist" id="chaps"></ul>
+      </div>
+
+      <div>
+        <h3>Records flowing through</h3>
+        <div class="funnel" id="funnel">
+          <div class="fstep" data-max="1000">
+            <div class="flabel"><span>Imported</span><b>0</b></div>
+            <div class="fbar"><i></i></div>
+          </div>
+          <div class="fstep excluded" data-max="1000">
+            <div class="flabel"><span>Duplicates removed</span><b>0</b></div>
+            <div class="fbar"><i></i></div>
+          </div>
+          <div class="fstep excluded" data-max="1000">
+            <div class="flabel"><span>Excluded · Stage 1</span><b>0</b></div>
+            <div class="fbar"><i></i></div>
+          </div>
+          <div class="fstep excluded" data-max="1000">
+            <div class="flabel"><span>Excluded · Stage 2</span><b>0</b></div>
+            <div class="fbar"><i></i></div>
+          </div>
+          <div class="fstep final" data-max="1000">
+            <div class="flabel"><span>Included</span><b>0</b></div>
+            <div class="fbar"><i></i></div>
+          </div>
+          <p class="fnote">An illustrative corpus of 1,000 records, narrowing as the walkthrough advances. Your own counts appear on the Export tab.</p>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<footer>
+  <p><b>Shodh v1.0.0</b> · Licensed under Apache-2.0 · Bundles Mozilla PDF.js (Apache-2.0).</p>
+  <p>Keyboard: <kbd>Space</kbd> play/pause · <kbd>←</kbd> <kbd>→</kbd> step · <kbd>1</kbd>–<kbd>8</kbd> jump to step. This page works offline and can be printed as a reference sheet. Full documentation is in <code>docs/USER_MANUAL.md</code>.</p>
+</footer>
+
+<script>
+'use strict';
+(function () {
+  var chapters = Array.prototype.slice.call(document.querySelectorAll('.chapter'));
+  var chapsEl  = document.getElementById('chaps');
+  var bar      = document.getElementById('bar');
+  var playBtn  = document.getElementById('play');
+  var prevBtn  = document.getElementById('prev');
+  var nextBtn  = document.getElementById('next');
+  var countEl  = document.getElementById('count');
+  var steps    = Array.prototype.slice.call(document.querySelectorAll('.fstep'));
+
+  var reduced  = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var idx = 0, playing = !reduced, t0 = 0, elapsed = 0, raf = null;
+
+  // PRISMA funnel values per chapter (illustrative, 1000-record corpus)
+  var FUNNEL = [
+    [0,0,0,0,0],          // 01 create
+    [1000,0,0,0,0],       // 02 import
+    [1000,180,0,0,0],     // 03 duplicates
+    [1000,180,610,0,0],   // 04 stage 1
+    [1000,180,610,0,0],   // 05 conflicts
+    [1000,180,610,140,0], // 06 stage 2
+    [1000,180,610,140,0], // 07 ask
+    [1000,180,610,140,70] // 08 export
+  ];
+
+  function pad(n){ return (n<10?'0':'') + n; }
+
+  // build chapter list
+  chapters.forEach(function (c, i) {
+    var li = document.createElement('li');
+    var b  = document.createElement('button');
+    b.innerHTML = '<span class="num">' + pad(i+1) + '</span><span>' + c.getAttribute('data-title') + '</span>';
+    b.addEventListener('click', function () { go(i); });
+    li.appendChild(b); chapsEl.appendChild(li);
+  });
+  var lis = Array.prototype.slice.call(chapsEl.children);
+
+  function paintFunnel(i) {
+    var vals = FUNNEL[i] || FUNNEL[0];
+    steps.forEach(function (s, k) {
+      var max = parseFloat(s.getAttribute('data-max')) || 1000;
+      var v = vals[k] || 0;
+      s.querySelector('b').textContent = v ? v.toLocaleString() : '0';
+      s.querySelector('.fbar i').style.width = (v / max * 100) + '%';
+    });
+  }
+
+  function go(i) {
+    idx = (i + chapters.length) % chapters.length;
+    chapters.forEach(function (c, k) { c.classList.toggle('on', k === idx); });
+    lis.forEach(function (l, k) { l.classList.toggle('on', k === idx); });
+    countEl.textContent = pad(idx + 1) + ' / ' + pad(chapters.length);
+    paintFunnel(idx);
+    t0 = performance.now();
+    elapsed = 0;
+    bar.style.width = '0%';
+  }
+
+  function dur() {
+    return parseInt(chapters[idx].getAttribute('data-dur'), 10) || 7000;
+  }
+
+  function tick(now) {
+    if (!playing) return;
+    var p = (now - t0) / dur();
+    if (p >= 1) { go(idx + 1); }
+    else { bar.style.width = (p * 100) + '%'; }
+    raf = requestAnimationFrame(tick);
+  }
+
+  function setPlaying(on) {
+    playing = on;
+    playBtn.textContent = on ? '⏸ Pause' : '▶ Play';
+    playBtn.setAttribute('aria-pressed', on ? 'false' : 'true');
+    if (on) {
+      // resume from where we paused rather than restarting the step
+      t0 = performance.now() - elapsed;
+      raf = requestAnimationFrame(tick);
+    } else {
+      elapsed = performance.now() - t0;
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+    }
+  }
+
+  playBtn.addEventListener('click', function () { setPlaying(!playing); });
+  prevBtn.addEventListener('click', function () { go(idx - 1); });
+  nextBtn.addEventListener('click', function () { go(idx + 1); });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    if (e.key === ' ') { e.preventDefault(); setPlaying(!playing); }
+    else if (e.key === 'ArrowRight') { go(idx + 1); }
+    else if (e.key === 'ArrowLeft')  { go(idx - 1); }
+    else if (/^[1-8]$/.test(e.key))  { go(parseInt(e.key, 10) - 1); }
+  });
+
+  // pause when the tab is hidden so the walkthrough doesn't run unseen
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden && playing) setPlaying(false);
+  });
+
+  go(0);
+  setPlaying(!reduced);
+  if (reduced) bar.style.width = '0%';
+})();
+</script>
+</body>
+</html>

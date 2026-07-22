@@ -1,0 +1,32 @@
+Shodh · शोध
+An offline systematic literature review workbench
+
+Copyright <2026> <Tanuj Namboodri>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+---
+
+This product includes PDF.js, developed by Mozilla and Contributors.
+
+  PDF.js — A PDF viewer built with HTML5
+  Copyright Mozilla and Contributors
+  Licensed under the Apache License, Version 2.0
+  https://github.com/mozilla/pdf.js
+
+---
+
+NOTE TO REDISTRIBUTORS
+This NOTICE file must be reproduced in any redistribution of this software
+in accordance with Section 4(d) of the Apache License, Version 2.0.
+See THIRD_PARTY_NOTICES.md for full attribution details.

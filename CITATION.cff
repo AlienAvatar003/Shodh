@@ -1,0 +1,32 @@
+
+
+cff-version: 1.0.0
+message: "If you use Shodh in your research, please cite it using the metadata below."
+title: "Shodh: An offline literature-review desk for systematic reviews"
+abstract: >-
+  Shodh is a free, self-contained, browser-based application for conducting
+  systematic literature reviews. It implements a two-stage, PRISMA-2020-aligned
+  screening workflow (title/abstract and full-text), reference import from RIS,
+  BibTeX, and CSV, PDF attachment and offline text extraction, heuristic
+  deduplication, multi-reviewer conflict adjudication, offline keyword-based
+  retrieval, PRISMA flow-diagram and decision-log export, and reference-manager
+  export. All data is stored locally in the user's browser.
+type: software
+authors:
+  - given-names: "<Tanuj>"
+    family-names: "<Namboodri>"
+    # orcid: "https://orcid.org/my-orcid?orcid=0000-0002-6256-7075"   # optional; delete if none
+    # affiliation: "<University of Miskolc>"                 # optional
+version: "1.0.0"                 # <-- set to the version you are releasing
+date-released: "2026-07-21"      # <-- set to your release date (YYYY-MM-DD)
+url: "https://github.com/<OWNER>/<REPO>"
+repository-code: "https://github.com/<OWNER>/<REPO>"
+license: Apache License 2.0
+keywords:
+  - systematic review
+  - literature review
+  - PRISMA
+  - screening
+  - reference management
+  - research software
+# doi: "10.5281/zenodo.XXXXXXX"   # optional; add if you mint one via Zenodo
