@@ -49,7 +49,7 @@ That's it. Full step-by-step instructions are in the [User Manual](docs/USER_MAN
 
 ## Documentation
 
-- **[Guided walkthrough](shodh-guide.html)** — an animated eight-step tour of the whole workflow. Open it in a browser like any other page; it works offline. **Start here if you are new.**
+- **Guided walkthrough** — an animated eight-step tour of the whole workflow, **built into the app**: open `shodh.html` and click ▶ Guided walkthrough on the Desk. **Start here if you are new.** A standalone copy ([shodh-guide.html](shodh-guide.html)) is also included for sharing or printing.
 - **[User Manual](docs/USER_MANUAL.md)** — a complete walkthrough of every tab and feature.
 - **[Installation & platforms](docs/INSTALL.md)** — Windows, macOS, Linux, and hosting for a whole lab.
 - **[How to cite Shodh](docs/CITING.md)** — what to put in your paper's methods and references. **Please read this if you use Shodh in published work.**
@@ -73,9 +73,10 @@ before opening a PR, and the [Code of Conduct](CODE_OF_CONDUCT.md) for the
 expected standards of interaction. To report a security or privacy issue
 privately, see [SECURITY.md](SECURITY.md).
 
+Planned and aspirational development directions are in [ROADMAP.md](ROADMAP.md).
 
 ## Licence and third-party code
 
-Shodh is released under the **Apache License 2.0** (see [LICENSE](LICENSE)). This is a permissive open-source licence: you may use, modify, and redistribute Shodh freely, including in commercial or closed-source products, provided you retain the copyright and licence notices. It also includes an explicit patent grant that the MIT Licence does not.
+Shodh is released under the **Apache License 2.0** (see [LICENSE](LICENSE)). This is a permissive open-source licence: you may use, modify, and redistribute Shodh freely, including in commercial or closed-source products, provided you retain the copyright and licence notices. It also includes an explicit patent grant.
 
 Shodh **bundles Mozilla's [PDF.js](https://github.com/mozilla/pdf.js)**, which is licenced under the same Apache License 2.0. Both the wrapper and the bundled library therefore carry identical licence obligations. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for attribution details and the [NOTICE](NOTICE) file for the attribution notices that must be reproduced on redistribution.
