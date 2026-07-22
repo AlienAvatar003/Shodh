@@ -1,6 +1,4 @@
-
-
-cff-version: 1.0.0
+cff-version: 1.2.0
 message: "If you use Shodh in your research, please cite it using the metadata below."
 title: "Shodh: An offline literature-review desk for systematic reviews"
 abstract: >-
@@ -13,15 +11,15 @@ abstract: >-
   export. All data is stored locally in the user's browser.
 type: software
 authors:
-  - given-names: "<Tanuj>"
-    family-names: "<Namboodri>"
-    # orcid: "https://orcid.org/my-orcid?orcid=0000-0002-6256-7075"   # optional; delete if none
-    # affiliation: "<University of Miskolc>"                 # optional
-version: "1.0.0"                 # <-- set to the version you are releasing
-date-released: "2026-07-21"      # <-- set to your release date (YYYY-MM-DD)
-url: "https://github.com/<OWNER>/<REPO>"
-repository-code: "https://github.com/<OWNER>/<REPO>"
-license: Apache License 2.0
+  - given-names: Tanuj
+    family-names: Namboodri
+    orcid: "https://orcid.org/0000-0002-6256-7075"
+    affiliation: "University of Miskolc"
+version: "1.0.0"
+date-released: "2026-07-22"
+url: "https://github.com/AlienAvatar003/Shodh"
+repository-code: "https://github.com/AlienAvatar003/Shodh"
+license: Apache-2.0
 keywords:
   - systematic review
   - literature review
@@ -29,4 +27,3 @@ keywords:
   - screening
   - reference management
   - research software
-# doi: "10.5281/zenodo.XXXXXXX"   # optional; add if you mint one via Zenodo
