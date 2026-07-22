@@ -3224,7 +3224,14 @@ function viewExport(v) {
     ])
   ]));
 
-  v.appendChild(h('p', { class: 'muted', style: 'font-size:12.5px;margin-top:16px', text: 'The PRISMA flow diagram and its counts are shown at the top of this tab.' }));
+  // ---- Feedback ----
+  v.appendChild(h('div', { class: 'divider' }));
+  v.appendChild(h('div', { style: 'display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:4px 0' }, [
+    h('p', { class: 'muted', style: 'font-size:12.5px;margin:0', text: 'The PRISMA flow diagram and its counts are shown at the top of this tab.' }),
+    h('a', { href: 'https://forms.gle/kdQHmxBqzvoMGsX96', target: '_blank', rel: 'noopener',
+      style: 'font-size:12.5px;color:var(--stamp);white-space:nowrap;text-decoration:none;border:1px solid var(--stamp-soft);border-radius:3px;padding:4px 10px;background:var(--stamp-soft)' },
+      ['\uD83D\uDCAC Found a bug or have a suggestion?'])
+  ]));
 }
 function exportCard(title, sub, onclick) {
   return h('div', { class: 'panel panel-pad', style: 'display:flex;justify-content:space-between;align-items:center;gap:12px' }, [

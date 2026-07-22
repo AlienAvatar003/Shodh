@@ -66,12 +66,20 @@ Shodh is a genuinely useful tool, but it is not magic. Please keep these in mind
 - **Deduplication is heuristic.** DOI/title/fuzzy matching is convenient but imperfect. **Review suggested duplicates before removing them.**
 - **Your data lives in one browser profile.** Reviews are tied to the browser and origin you created them in. Clearing browser data, switching browsers or machines, or (for the desktop builds) changing the local port can make a review disappear. **Export a JSON backup regularly.** See [How your data is stored](docs/USER_MANUAL.md#how-your-data-is-stored).
 
+## Feedback and suggestions
+
+Found a bug, or have an idea for improvement? Please use the feedback form — it takes two minutes and goes directly to the development team.
+
+**[Share feedback or report a bug →](https://forms.gle/kdQHmxBqzvoMGsX96)**
+
 ## Contributing
 
 Issues and pull requests are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md)
 before opening a PR, and the [Code of Conduct](CODE_OF_CONDUCT.md) for the
 expected standards of interaction. To report a security or privacy issue
 privately, see [SECURITY.md](SECURITY.md).
+
+Planned and aspirational development directions are in [ROADMAP.md](ROADMAP.md).
 
 ## Licence and third-party code
 
