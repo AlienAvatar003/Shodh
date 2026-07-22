@@ -73,7 +73,6 @@ before opening a PR, and the [Code of Conduct](CODE_OF_CONDUCT.md) for the
 expected standards of interaction. To report a security or privacy issue
 privately, see [SECURITY.md](SECURITY.md).
 
-Planned and aspirational development directions are in [ROADMAP.md](ROADMAP.md).
 
 ## Licence and third-party code
 
