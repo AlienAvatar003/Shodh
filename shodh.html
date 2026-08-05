@@ -1,9 +1,33 @@
+<!--
+  Shodh · शोध — An offline systematic literature review desk
+  Version 1.0.0
+
+  Copyright 2026 Tanuj Namboodri
+
+  SPDX-License-Identifier: Apache-2.0
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  This file bundles Mozilla PDF.js (https://github.com/mozilla/pdf.js),
+  Copyright Mozilla and Contributors, also licensed under Apache-2.0.
+  See THIRD_PARTY_NOTICES.md for details.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Shodh — Literature Review Desk</title>
+<title>Shodh 1.0.0 — Literature Review Desk</title>
 <style>
 :root{
   --paper:#F1F2EC; --card:#FFFFFF; --ink:#22261F; --muted:#5A6052;
@@ -33,10 +57,14 @@ input,select,textarea{font-family:var(--ui);font-size:14px}
 /* ---- shell ---- */
 .wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px}
 .masthead{display:flex;align-items:baseline;gap:14px;padding:22px 20px 14px;max-width:1180px;margin:0 auto;flex-wrap:wrap}
-.build-stamp{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);opacity:.75}
 .logo{font-family:var(--serif);font-size:30px;font-weight:600;letter-spacing:-.5px;line-height:1}
 .logo .dot{color:var(--stamp)}
 .tagline{font-family:var(--mono);font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.conf-card{transition:border-color .15s,box-shadow .15s}
+.conf-card.focused{border-color:var(--stamp);box-shadow:0 0 0 2px var(--stamp-soft),0 2px 10px rgba(34,38,31,.06)}
+.conf-card.focused .conf-marker{opacity:1}
+.conf-marker{opacity:0;font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--stamp);text-transform:uppercase}
+.verbadge{font-family:var(--mono);font-size:10px;letter-spacing:.5px;color:var(--stamp);background:var(--stamp-soft);border:1px solid var(--rule);border-radius:999px;padding:2px 8px;line-height:1.6;white-space:nowrap}
 .proj-pill{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted);border:1px solid var(--rule);padding:5px 9px;border-radius:2px;background:var(--card)}
 
 /* ---- tabs ---- */
@@ -197,15 +225,91 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--paper);border:1px so
 .modal-body{padding:20px}
 .meta-badge{font-family:var(--mono);font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;border:1px solid var(--rule);border-radius:2px;padding:3px 8px;color:var(--muted);background:var(--card)}
 
-</style>
-<meta name="shodh-build" content="1.1.0">
-<meta name="shodh-version" content="1.1.0">
+
+/* ============== Guided walkthrough (all rules scoped to .gw) ============== */
+.modal.gw-modal{max-width:1060px}
+.gw{font-family:var(--ui);color:var(--ink);line-height:1.6}
+.gw *{box-sizing:border-box}
+.gw .gw-intro p{margin:0 0 18px;color:var(--muted);font-size:14.5px;max-width:66ch}
+.gw .gw-foot{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--rule);font-size:12px;color:var(--muted);line-height:1.6}
+.gw kbd{
+  font-family:var(--mono); font-size:.85em; border:1px solid var(--rule);
+  border-bottom-width:2px; border-radius:var(--r); padding:1px 5px;
+  background:var(--card); white-space:nowrap;
+}.gw .masthead{
+  display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+  padding:22px 20px 14px; max-width:1180px; margin:0 auto;
+}.gw .logo{font-family:var(--serif); font-size:30px; font-weight:600; letter-spacing:-.5px; line-height:1}.gw .logo .dot{color:var(--stamp)}.gw .tagline{font-family:var(--mono); font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:var(--muted)}.gw .verbadge{
+  font-family:var(--mono); font-size:10px; color:var(--stamp); background:var(--stamp-soft);
+  border:1px solid var(--rule); border-radius:999px; padding:2px 8px; white-space:nowrap;
+}.gw .wrap{max-width:1180px; margin:0 auto; padding:0 20px 80px}.gw .intro{
+  border-top:1px solid var(--rule); border-bottom:1px solid var(--rule);
+  padding:26px 0 24px; margin-bottom:26px;
+}.gw .intro h1{
+  font-family:var(--serif); font-size:clamp(28px,4vw,42px); font-weight:600;
+  line-height:1.15; margin:0 0 12px; letter-spacing:-.4px;
+}.gw .intro p{margin:0; max-width:64ch; color:var(--muted); font-size:16px}.gw .stage{display:grid; grid-template-columns:minmax(0,1fr) 260px; gap:26px; align-items:start}@media(max-width:900px){.gw .stage{grid-template-columns:minmax(0,1fr)}}.gw .player{
+  background:var(--card); border:1px solid var(--rule); border-radius:var(--r);
+  box-shadow:0 1px 0 var(--rule),0 2px 10px rgba(34,38,31,.05); overflow:hidden;
+}.gw .screen{position:relative; min-height:430px; padding:26px 28px 22px}@media(max-width:600px){.gw .screen{padding:20px 18px 18px; min-height:400px}}.gw .eyebrow{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--stamp); margin-bottom:10px; display:flex; align-items:center; gap:9px;
+}.gw .eyebrow .n{
+  background:var(--stamp); color:#fff; border-radius:2px; padding:1px 6px;
+  font-size:10px; letter-spacing:1px;
+}.gw .screen h2{
+  font-family:var(--serif); font-size:26px; font-weight:600; margin:0 0 8px; letter-spacing:-.2px;
+}.gw .screen .lede{color:var(--muted); margin:0 0 18px; max-width:58ch; font-size:14.5px}.gw .chapter{display:none}.gw .chapter.on{display:block; animation:gw-fade .45s ease both}@keyframes gw-fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}.gw .mock{
+  border:1px solid var(--rule-2); border-radius:var(--r); background:var(--paper);
+  padding:14px; font-size:13px;
+}.gw .mock-bar{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px}.gw .mock-tab{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:1.2px; text-transform:uppercase;
+  padding:4px 8px; border:1px solid transparent; border-radius:2px; color:var(--muted);
+}.gw .mock-tab.on{background:var(--card); border-color:var(--rule); color:var(--ink); font-weight:600}.gw .rec{
+  background:var(--card); border:1px solid var(--rule); border-radius:var(--r);
+  padding:12px 14px; margin-bottom:8px;
+}.gw .rec-t{font-family:var(--serif); font-size:15px; line-height:1.35; margin-bottom:4px}.gw .rec-m{font-size:11.5px; color:var(--muted); font-family:var(--mono)}.gw .pill{
+  display:inline-block; font-family:var(--mono); font-size:10px; letter-spacing:.6px;
+  padding:2px 7px; border-radius:999px; text-transform:uppercase;
+}.gw .pill.inc{background:var(--inc-soft); color:var(--inc)}.gw .pill.exc{background:var(--exc-soft); color:var(--exc)}.gw .pill.may{background:var(--may-soft); color:var(--may)}.gw .pill.dup{background:var(--stamp-soft); color:var(--stamp)}.gw .keyrow{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; align-items:center}.gw .act{
+  flex:1; min-width:96px; text-align:center; padding:9px 8px; border-radius:var(--r);
+  border:1px solid var(--rule); background:var(--card); font-size:12.5px; font-weight:600;
+}.gw .act.inc{border-color:var(--inc); color:var(--inc)}.gw .act.exc{border-color:var(--exc); color:var(--exc)}.gw .act.may{border-color:var(--may); color:var(--may)}.gw .act .k{display:block; font-family:var(--mono); font-size:10px; font-weight:400; color:var(--muted); margin-top:2px}.gw .note{
+  border-left:2px solid var(--stamp); background:var(--stamp-soft);
+  padding:10px 14px; margin-top:16px; font-size:13px; border-radius:0 var(--r) var(--r) 0;
+}.gw .note b{font-weight:600}.gw .warn{border-left-color:var(--may); background:var(--may-soft)}.gw .two{display:grid; grid-template-columns:1fr 1fr; gap:10px}@media(max-width:600px){.gw .two{grid-template-columns:1fr}}.gw .transport{
+  border-top:1px solid var(--rule); padding:12px 16px;
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:var(--card);
+}.gw .btn{
+  font-family:var(--ui); font-size:13px; padding:7px 14px; border-radius:var(--r);
+  border:1px solid var(--rule); background:var(--card); color:var(--ink); cursor:pointer;
+}.gw .btn:hover{border-color:var(--stamp); color:var(--stamp)}.gw .btn:focus-visible{outline:2px solid var(--stamp); outline-offset:2px}.gw .btn.primary{background:var(--stamp); border-color:var(--stamp); color:#fff; font-weight:600}.gw .btn.primary:hover{opacity:.9; color:#fff}.gw .btn[disabled]{opacity:.4; cursor:default}.gw .btn[disabled]:hover{border-color:var(--rule); color:var(--ink)}.gw .counter{font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-left:auto}.gw .progress{height:3px; background:var(--rule-2); position:relative; overflow:hidden}.gw .progress i{
+  position:absolute; inset:0 auto 0 0; background:var(--stamp); width:0;
+  transition:width .25s linear;
+}.gw .side{display:flex; flex-direction:column; gap:18px; position:sticky; top:18px}@media(max-width:900px){.gw .side{position:static}}.gw .side h3{
+  font-family:var(--mono); font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--muted); margin:0 0 9px; font-weight:400;
+}.gw .chaplist{list-style:none; margin:0; padding:0; border-top:1px solid var(--rule)}.gw .chaplist li{border-bottom:1px solid var(--rule-2)}.gw .chaplist button{
+  width:100%; text-align:left; background:none; border:0; padding:8px 4px; cursor:pointer;
+  font-family:var(--ui); font-size:13px; color:var(--muted); display:flex; gap:9px; align-items:baseline;
+}.gw .chaplist button:hover{color:var(--stamp)}.gw .chaplist button:focus-visible{outline:2px solid var(--stamp); outline-offset:-2px}.gw .chaplist li.on button{color:var(--ink); font-weight:600}.gw .chaplist li.on button .num{color:var(--stamp)}.gw .chaplist .num{font-family:var(--mono); font-size:10.5px; color:var(--rule); min-width:16px}.gw .funnel{
+  background:var(--card); border:1px solid var(--rule); border-radius:var(--r); padding:14px;
+}.gw .fstep{margin-bottom:9px}.gw .fstep:last-child{margin-bottom:0}.gw .flabel{
+  display:flex; justify-content:space-between; align-items:baseline; gap:8px;
+  font-size:11.5px; color:var(--muted); margin-bottom:3px;
+}.gw .flabel b{font-family:var(--mono); font-size:12.5px; color:var(--ink); font-weight:600}.gw .fbar{height:6px; background:var(--rule-2); border-radius:999px; overflow:hidden}.gw .fbar i{
+  display:block; height:100%; width:0; background:var(--stamp); border-radius:999px;
+  transition:width .6s cubic-bezier(.4,0,.2,1);
+}.gw .fstep.excluded .fbar i{background:var(--exc)}.gw .fstep.final .fbar i{background:var(--inc)}.gw .fnote{font-size:11px; color:var(--muted); margin-top:10px; line-height:1.45}.gw footer{
+  max-width:1180px; margin:0 auto; padding:24px 20px 60px; border-top:1px solid var(--rule);
+  color:var(--muted); font-size:12.5px; line-height:1.6;
+}.gw footer code{font-family:var(--mono); font-size:.92em}@media(prefers-reduced-motion:reduce){}@media print{.gw .transport, .gw .side, .gw .progress{display:none}.gw .chapter{display:block !important; page-break-inside:avoid; margin-bottom:30px}}</style>
 </head>
 <body>
 <header class="masthead">
   <span class="logo">Shodh<span class="dot">.</span></span>
   <span class="tagline">शोध · literature review desk</span>
-  <span class="build-stamp" id="buildStamp" title="Which build is running"></span>
+  <span class="verbadge" id="verBadge" title="Shodh version">v1.0.0</span>
   <span class="proj-pill" id="projPill">no project</span>
   <button class="btn sm primary hidden" id="exportBtn" style="margin-left:8px">⬇ Export</button>
 </header>
@@ -937,52 +1041,6 @@ var LR = (function () {
     return rows;
   }
 
-  // ---------- synthetic sample records (clearly demo data) ----------
-  function sampleRefs() {
-    function s(t, au, y, j, doi, ab, kw) {
-      var r = makeRef({ title: t, authors: au, year: y, journal: j, doi: doi, abstract: ab, keywords: kw, source: 'sample' });
-      return r;
-    }
-    var J = 'Journal of Demonstration Data (synthetic)';
-    return [
-      s('Prediction of flank wear in dry turning of stainless steel using cutting force signals',
-        ['Doe, J.', 'Roe, A.'], '2021', J, '10.0000/demo.1',
-        'Synthetic demo abstract. Cutting force components were recorded during dry turning of an austenitic stainless steel and correlated with flank wear progression. A regression model predicted tool wear within a stated tolerance across the tested feed and speed range.',
-        ['tool wear', 'turning', 'cutting force']),
-      s('Predicting flank wear in dry turning of stainless steels using cutting force signals',
-        ['Doe, J.', 'Roe, A.'], '2021', J, '10.0000/demo.1',
-        'Duplicate demo record with the same DOI, present to demonstrate exact deduplication.',
-        ['tool wear']),
-      s('Surface roughness modelling in milling of aluminium alloys with neural networks',
-        ['Stone, K.'], '2020', J, '10.0000/demo.2',
-        'Synthetic demo abstract. A feed-forward neural network mapped spindle speed, feed per tooth, and depth of cut to arithmetic mean roughness in end milling of aluminium alloys.',
-        ['surface roughness', 'milling', 'neural network']),
-      s('Surface roughness modeling in milling of aluminum alloys with neural networks',
-        ['Stone, K.'], '2020', '', '',
-        'Near-duplicate demo record with American spelling, present to demonstrate fuzzy deduplication.',
-        []),
-      s('Chatter detection in turning using wavelet transforms of vibration signals',
-        ['Field, M.', 'Marsh, T.'], '2019', J, '10.0000/demo.3',
-        'Synthetic demo abstract. Accelerometer signals from external turning were decomposed with wavelet transforms; energy ratios in selected bands separated stable cutting from chatter onset.',
-        ['chatter', 'vibration', 'wavelet']),
-      s('A review of bipolar plate manufacturing routes for hydrogen fuel cells',
-        ['Wells, P.'], '2022', J, '10.0000/demo.4',
-        'Synthetic demo abstract. Stamping, hydroforming, and machining routes for metallic bipolar plates are compared on cost, cycle time, and channel accuracy, with notes on coating steps.',
-        ['fuel cell', 'bipolar plate', 'manufacturing']),
-      s('Bayesian estimation of Taylor tool life parameters under sparse experiments',
-        ['Roe, A.', 'Doe, J.'], '2023', J, '10.0000/demo.5',
-        'Synthetic demo abstract. A hierarchical Bayesian model estimated Taylor exponent and constant from a small designed experiment, reporting credible intervals and posterior predictive checks.',
-        ['Bayesian', 'tool life', 'Taylor equation']),
-      s('Effect of coolant strategies on cutting temperature in hard turning',
-        ['Marsh, T.'], '2018', J, '10.0000/demo.6',
-        'Synthetic demo abstract. Dry, flood, and minimum quantity lubrication conditions were compared by inserted thermocouple measurements during hard turning of a bearing steel.',
-        ['coolant', 'temperature', 'hard turning']),
-      s('Fairness benchmarking of camera-based driver monitoring across demographic groups',
-        ['Stone, K.', 'Wells, P.'], '2024', J, '10.0000/demo.7',
-        'Synthetic demo abstract. Gaze estimation error of a camera-based driver monitoring pipeline was benchmarked across demographic subgroups, and per-group calibration reduced the error gap.',
-        ['driver monitoring', 'fairness', 'gaze'])
-    ];
-  }
 
   return {
     tokenize: tokenize, normTitle: normTitle, normDoi: normDoi, yearOf: yearOf, esc: esc, uid: uid,
@@ -991,7 +1049,7 @@ var LR = (function () {
     chunkPages: chunkPages, BM25: BM25, NBRanker: NBRanker, computeVerdict: computeVerdict,
     prismaCounts: prismaCounts, prismaSVG: prismaSVG, wrapText: wrapText,
     keywordScreen: keywordScreen, toBibTeX: toBibTeX, guessTitleFromItems: guessTitleFromItems, notesTxt: notesTxt,
-    toRIS: toRIS, toCSV: toCSV, csvCell: csvCell, decisionLogRows: decisionLogRows, sampleRefs: sampleRefs
+    toRIS: toRIS, toCSV: toCSV, csvCell: csvCell, decisionLogRows: decisionLogRows
   };
 })();
 
@@ -1241,7 +1299,7 @@ function createProject(fields, onDone) {
   S.projectId = id;
   S.project = { name: fields.name, question: fields.question, type: fields.type, domain: fields.domain, createdAt: Date.now() };
   S.refs = [];
-  S.reviewers = [{ id: 'rev1', name: fields.reviewer || 'Reviewer 1' }];
+  S.reviewers = [{ id: 'rev1', name: fields.reviewer || 'Reviewer' }];
   S.activeReviewer = 'rev1';
   S.settings = { required: 1, llm: keepLlm };
   resetTransientState();
@@ -1284,82 +1342,13 @@ function nameMap() { var m = {}; S.reviewers.forEach(function (r) { m[r.id] = r.
 function recomputeVerdicts() {
   S.refs.forEach(function (r) { if (r.status !== 'duplicate') r.verdict = LR.computeVerdict(r, S.settings.required); });
 }
-// In the native desktop window (pywebview/WKWebView), blob/<a download> links
-// cannot be saved and instead navigate the window (freezing it). When that host
-// bridge is present we hand the bytes to Python, which shows a real "Save As"
-// dialog and writes the file wherever the user chooses. In browsers we keep the
-// normal download.
-function inNativeWindow() {
-  return !!(window.pywebview && window.pywebview.api && window.pywebview.api.shodhSave);
-}
-function b64FromText(text) {
-  try { return btoa(unescape(encodeURIComponent(text))); }
-  catch (e) {
-    var bytes = new TextEncoder().encode(text), bin = '', i;
-    for (i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
-    return btoa(bin);
-  }
-}
-function hostSave(filename, b64) {
-  try {
-    window.pywebview.api.shodhSave(filename, b64).then(function (res) {
-      if (res && res.ok) toast('Saved: ' + (res.path || filename));
-      else if (res && res.canceled) { /* user dismissed the dialog */ }
-      else toast('Save failed' + (res && res.error ? ' (' + res.error + ')' : ''));
-    })['catch'](function () { toast('Save failed'); });
-  } catch (e) { toast('Save failed'); }
-}
-function blobViaAnchor(filename, blob) {
+function download(filename, text, mime) {
+  var blob = new Blob([text], { type: mime || 'text/plain;charset=utf-8' });
   var url = URL.createObjectURL(blob);
   var a = h('a', { href: url, download: filename });
   document.body.appendChild(a); a.click();
   setTimeout(function () { document.body.removeChild(a); URL.revokeObjectURL(url); }, 300);
 }
-function download(filename, text, mime) {
-  if (inNativeWindow()) { hostSave(filename, b64FromText(text)); return; }
-  blobViaAnchor(filename, new Blob([text], { type: mime || 'text/plain;charset=utf-8' }));
-}
-function downloadBlob(filename, blob) {
-  if (inNativeWindow()) {
-    var fr = new FileReader();
-    fr.onload = function () { var d = String(fr.result); hostSave(filename, d.slice(d.indexOf(',') + 1)); };
-    fr.onerror = function () { toast('Save failed'); };
-    fr.readAsDataURL(blob);
-    return;
-  }
-  blobViaAnchor(filename, blob);
-}
-
-// version + build identity — single source of truth in <meta> tags
-var SHODH_VERSION = (function () {
-  try {
-    var m = document.querySelector('meta[name="shodh-version"]');
-    return (m && m.content) ? m.content : '?';
-  } catch (e) { return '?'; }
-})();
-var SHODH_BUILD = (function () {
-  try {
-    var m = document.querySelector('meta[name="shodh-build"]');
-    return (m && m.content) ? m.content : 'unknown';
-  } catch (e) { return 'unknown'; }
-})();
-function paintBuildStamp() {
-  var n = el('buildStamp');
-  if (n) n.textContent = 'v' + SHODH_VERSION;
-}
-
-// ============================================================
-// SUPPORT LINK  —  edit this one line, nothing else.
-// Paste the page where people can support you, e.g.
-//   'https://ko-fi.com/yourname'
-//   'https://paypal.me/yourname'
-//   'https://github.com/sponsors/yourname'
-// Leave it as '' and the whole support section stays hidden.
-// No script, image, or tracker is ever loaded from this URL —
-// it is only opened if a user chooses to click it.
-var SUPPORT_URL = '';
-var SUPPORT_LABEL = 'Buy me a coffee';
-// ============================================================
 
 // ---------- router ----------
 var ROUTE = 'dashboard';
@@ -1426,20 +1415,65 @@ function render() {
 }
 
 // ================= DASHBOARD =================
+// ---- Guided walkthrough ----
+// Opens shodh-guide.html in a new tab. The guide is a separate file that must
+// sit in the same folder as shodh.html; if it was not downloaded alongside the
+// app, the new tab will not find it, so we say where to get it.
+var GUIDE = { open: false, teardown: null };
+var GUIDE_HTML = "<div class=\"gw\"><div class=\"gw-intro\"><p>Eight steps, from an empty desk to an exported PRISMA diagram. The walkthrough plays on its own \u2014 pause any time, or jump to the step you need. Everything shown here happens on your own machine; nothing is uploaded.</p></div><div class=\"stage\">\n\n    <!-- ============ PLAYER ============ -->\n    <div class=\"player\">\n      <div class=\"progress\"><i id=\"gwBar\"></i></div>\n      <div class=\"screen\" id=\"gwScreen\">\n\n        <!-- 1 -->\n        <section class=\"chapter on\" data-title=\"Create the review\" data-dur=\"7000\">\n          <div class=\"eyebrow\"><span class=\"n\">01</span> Desk</div>\n          <h2>Create the review</h2>\n          <p class=\"lede\">Give the review a title and state the question it answers. Your name goes on every decision you record, so the audit trail says who did what.</p>\n          <div class=\"mock\">\n            <div class=\"mock-bar\">\n              <span class=\"mock-tab on\">Desk</span><span class=\"mock-tab\">Import</span>\n              <span class=\"mock-tab\">Duplicates</span><span class=\"mock-tab\">Stage 1</span>\n              <span class=\"mock-tab\">Conflicts</span><span class=\"mock-tab\">Stage 2</span>\n              <span class=\"mock-tab\">Ask</span><span class=\"mock-tab\">Export</span>\n            </div>\n            <div class=\"rec\">\n              <div class=\"rec-m\" style=\"margin-bottom:5px\">REVIEW TITLE</div>\n              <div class=\"rec-t\" style=\"color:var(--muted)\">e.g. Title of your research topic</div>\n            </div>\n            <div class=\"rec\">\n              <div class=\"rec-m\" style=\"margin-bottom:5px\">RESEARCH QUESTION</div>\n              <div class=\"rec-t\" style=\"color:var(--muted)\">e.g. What evidence are you trying to identify or compare?</div>\n            </div>\n            <div class=\"rec\">\n              <div class=\"rec-m\" style=\"margin-bottom:5px\">REVIEWER NAME</div>\n              <div class=\"rec-t\" style=\"color:var(--muted)\">e.g. Your name \u2014 recorded on every decision you make</div>\n            </div>\n          </div>\n          <div class=\"note\">You can run several reviews side by side. Each keeps its own records, decisions, and PDFs.</div>\n        </section>\n\n        <!-- 2 -->\n        <section class=\"chapter\" data-title=\"Import your search results\" data-dur=\"8000\">\n          <div class=\"eyebrow\"><span class=\"n\">02</span> Import</div>\n          <h2>Import your search results</h2>\n          <p class=\"lede\">Export your database searches as RIS, BibTeX, or CSV and drop the files in. Scopus, Web of Science, PubMed, Zotero, Mendeley, and EndNote all produce at least one of these.</p>\n          <div class=\"mock\">\n            <div class=\"two\">\n              <div class=\"rec\"><div class=\"rec-t\">RIS \u00b7 .ris</div><div class=\"rec-m\">EndNote \u00b7 Zotero \u00b7 PubMed</div></div>\n              <div class=\"rec\"><div class=\"rec-t\">BibTeX \u00b7 .bib</div><div class=\"rec-m\">Zotero \u00b7 JabRef \u00b7 LaTeX</div></div>\n              <div class=\"rec\"><div class=\"rec-t\">CSV \u00b7 .csv</div><div class=\"rec-m\">Scopus \u00b7 Web of Science</div></div>\n              <div class=\"rec\"><div class=\"rec-t\">PDF \u00b7 .pdf</div><div class=\"rec-m\">Matched to records by title</div></div>\n            </div>\n          </div>\n          <div class=\"note\">Drop PDFs in too. Text is extracted at import so it can be searched later in Ask. <b>Scanned PDFs have no text layer</b> \u2014 Shodh does not run OCR, so run those through an OCR tool first if you need them searchable.</div>\n        </section>\n\n        <!-- 3 -->\n        <section class=\"chapter\" data-title=\"Remove duplicates\" data-dur=\"8000\">\n          <div class=\"eyebrow\"><span class=\"n\">03</span> Duplicates</div>\n          <h2>Remove duplicates</h2>\n          <p class=\"lede\">Searching several databases returns the same paper more than once. Shodh finds candidates in three passes: identical DOI, identical title, then close-but-not-identical title.</p>\n          <div class=\"mock\">\n            <div class=\"rec\">\n              <span class=\"pill dup\">Exact DOI</span>\n              <div class=\"rec-t\" style=\"margin-top:7px\">Prediction of flank wear in dry turning using force signals</div>\n              <div class=\"rec-m\">10.0000/example.1 \u00b7 matched 2 records</div>\n            </div>\n            <div class=\"rec\">\n              <span class=\"pill dup\">Fuzzy title \u00b7 94%</span>\n              <div class=\"rec-t\" style=\"margin-top:7px\">Neural network modelling of surface roughness in end milling</div>\n              <div class=\"rec-m\">American / British spelling variant</div>\n            </div>\n          </div>\n          <div class=\"note warn\"><b>Check before you remove.</b> Fuzzy matching is a heuristic \u2014 it will miss some duplicates and flag some records that are not duplicates. Shodh never deletes anything on its own; you confirm each one, and every removal is written to the decision log.</div>\n        </section>\n\n        <!-- 4 -->\n        <section class=\"chapter\" data-title=\"Stage 1 \u2014 Title screening\" data-dur=\"8500\">\n          <div class=\"eyebrow\"><span class=\"n\">04</span> Stage 1</div>\n          <h2>Title screening</h2>\n          <p class=\"lede\">Work through the records on title, authors, and journal alone. One keystroke per decision. Anything you include moves forward to full text.</p>\n          <div class=\"mock\">\n            <div class=\"rec\">\n              <div class=\"rec-m\">record \u00b7 2021 \u00b7 screening as R. Sharma</div>\n              <div class=\"rec-t\" style=\"margin-top:6px\">Prediction of flank wear in dry turning of stainless steel using cutting force signals</div>\n              <div class=\"rec-m\" style=\"margin-top:4px\">Doe, J.; Roe, A. \u00b7 Journal of Manufacturing Science \u00b7 2021</div>\n            </div>\n            <div class=\"keyrow\">\n              <div class=\"act inc\">Include<span class=\"k\">\u2192 or I</span></div>\n              <div class=\"act exc\">Exclude<span class=\"k\">\u2190 or E</span></div>\n              <div class=\"act may\">Maybe<span class=\"k\">M</span></div>\n            </div>\n          </div>\n          <div class=\"note\">Pressed the wrong key? <kbd>U</kbd> undoes the last decision. Abstracts deliberately stay hidden until Stage 2 \u2014 this keeps the first pass fast and consistent.</div>\n        </section>\n\n        <!-- 5 -->\n        <section class=\"chapter\" data-title=\"Resolve conflicts\" data-dur=\"7500\">\n          <div class=\"eyebrow\"><span class=\"n\">05</span> Conflicts</div>\n          <h2>Resolve conflicts</h2>\n          <p class=\"lede\">When two reviewers screen the same records, disagreements collect here for adjudication. Each reviewer's vote stays hidden from the other until the record is resolved.</p>\n          <div class=\"mock\">\n            <div class=\"rec\">\n              <div class=\"rec-t\">Wavelet analysis of accelerometer signals for chatter detection</div>\n              <div class=\"rec-m\" style=\"margin-top:8px\">\n                R. Sharma <span class=\"pill inc\">Include</span>\n                &nbsp;&nbsp;A. Kov\u00e1cs <span class=\"pill exc\">Exclude</span>\n              </div>\n              <div class=\"keyrow\">\n                <div class=\"act inc\">Include</div>\n                <div class=\"act exc\">Exclude</div>\n              </div>\n            </div>\n          </div>\n          <div class=\"note warn\"><b>Independence is by convention, not enforced.</b> Shodh has no server, so it cannot stop two reviewers sharing one browser profile. Screen on separate machines or separate profiles, and describe your procedure in your methods section.</div>\n        </section>\n\n        <!-- 6 -->\n        <section class=\"chapter\" data-title=\"Stage 2 \u2014 Full-text screening\" data-dur=\"8500\">\n          <div class=\"eyebrow\"><span class=\"n\">06</span> Stage 2</div>\n          <h2>Full-text screening</h2>\n          <p class=\"lede\">Records that passed Stage 1 arrive here with their abstracts and any attached PDF. Decide one by one, or write a keyword rule and apply it to the whole matched set at once.</p>\n          <div class=\"mock\">\n            <div class=\"two\">\n              <div>\n                <div class=\"rec\">\n                  <div class=\"rec-t\">Comparison of stamping and hydroforming for bipolar plates</div>\n                  <div class=\"rec-m\" style=\"margin-top:5px\">Wells, P. \u00b7 2022 \u00b7 PDF attached</div>\n                  <div style=\"font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5\">Stamping, hydroforming, and machining routes are compared on cost, cycle time, and channel accuracy\u2026</div>\n                </div>\n              </div>\n              <div>\n                <div class=\"rec\">\n                  <div class=\"rec-m\" style=\"margin-bottom:6px\">KEYWORD RULE</div>\n                  <div style=\"font-family:var(--mono);font-size:12px\">hydroforming OR stamping</div>\n                  <div class=\"rec-m\" style=\"margin-top:8px\">matches 14 records</div>\n                </div>\n                <div class=\"keyrow\">\n                  <div class=\"act inc\">Include set</div>\n                  <div class=\"act exc\">Exclude set</div>\n                </div>\n              </div>\n            </div>\n          </div>\n          <div class=\"note\">Every exclusion at this stage needs a PRISMA reason \u2014 wrong population, wrong outcome, and so on. That is what fills the exclusion boxes in your flow diagram.</div>\n        </section>\n\n        <!-- 7 -->\n        <section class=\"chapter\" data-title=\"Search your corpus\" data-dur=\"9500\">\n          <div class=\"eyebrow\"><span class=\"n\">07</span> Ask</div>\n          <h2>Search what you have collected</h2>\n          <p class=\"lede\">Ask searches the abstracts and extracted PDF text of the records <em>you</em> imported, and returns the passages that match, ranked by relevance.</p>\n          <div class=\"mock\">\n            <div class=\"rec\">\n              <div class=\"rec-m\" style=\"margin-bottom:6px\">QUERY</div>\n              <div style=\"font-family:var(--serif);font-size:15px\">How can we help the environment with sustainable manufacturing?</div>\n            </div>\n            <div class=\"rec\">\n              <div class=\"rec-m\">rank 1 \u00b7 book \u00b7 2024</div>\n              <div class=\"rec-t\" style=\"margin-top:5px\">Sustainability in Smart Manufacturing: Trends, Scope, and Challenges</div>\n              <div class=\"rec-m\" style=\"margin-top:4px\">Shah, S.; Nautiyal, H.; Gugliani, G.; Kumar, A.; Namboodri, T.; Singla, Y. K. (Eds.) \u00b7 CRC Press \u00b7 doi 10.1201/9781003467496</div>\n              <div style=\"font-size:12.5px;margin-top:7px;line-height:1.5\">\u2026covers 3D printing and rapid prototyping for <b style=\"background:var(--may-soft)\">low-carbon</b> development, and the role of AI in digital <b style=\"background:var(--may-soft)\">manufacturing</b>\u2026</div>\n            </div>\n            <div class=\"rec\">\n              <div class=\"rec-m\">rank 2 \u00b7 chapter \u00b7 pp. 1\u201318</div>\n              <div class=\"rec-t\" style=\"margin-top:5px\">Globalization and International Issues in Sustainable Manufacturing</div>\n              <div class=\"rec-m\" style=\"margin-top:4px\">Kumar, A.; Singla, Y. K.; Namboodri, T. \u00b7 doi 10.1201/9781003467496-1</div>\n              <div style=\"font-size:12.5px;margin-top:7px;line-height:1.5\">\u2026the interaction between global supply chains and <b style=\"background:var(--may-soft)\">sustainable manufacturing</b> practice\u2026</div>\n            </div>\n          </div>\n          <div class=\"note warn\"><b>This is keyword search, not AI comprehension.</b> Ask ranks passages by BM25, a classical word-matching method \u2014 it will miss relevant text that uses different vocabulary. If you install Ollama separately, retrieved passages can optionally be sent to a local model for a draft synthesis; that stays on your machine, and anything it writes must be checked against the sources.</div>\n          <p style=\"font-size:11.5px;color:var(--muted);margin:10px 0 0\">Records shown are real and correctly cited; the highlighted excerpts are illustrative of how results are displayed, not verbatim quotations.</p>\n        </section>\n\n        <!-- 8 -->\n        <section class=\"chapter\" data-title=\"Export everything\" data-dur=\"9000\">\n          <div class=\"eyebrow\"><span class=\"n\">08</span> Export</div>\n          <h2>Export everything</h2>\n          <p class=\"lede\">Your included set for a reference manager, the review artefacts, the PRISMA diagram, and a full backup \u2014 all generated locally.</p>\n          <div class=\"mock\">\n            <div class=\"two\">\n              <div class=\"rec\"><div class=\"rec-t\">Included studies</div><div class=\"rec-m\">BibTeX \u00b7 RIS \u00b7 CSV</div></div>\n              <div class=\"rec\"><div class=\"rec-t\">Notes</div><div class=\"rec-m\">With title, authors, journal &amp; DOI</div></div>\n              <div class=\"rec\"><div class=\"rec-t\">Decision log</div><div class=\"rec-m\">Every vote \u00b7 full audit trail</div></div>\n              <div class=\"rec\"><div class=\"rec-t\">PRISMA diagram</div><div class=\"rec-m\">SVG &amp; PNG</div></div>\n              <div class=\"rec\"><div class=\"rec-t\">Full project</div><div class=\"rec-m\">JSON backup you can re-import</div></div>\n              <div class=\"rec\"><div class=\"rec-t\">Cite Shodh</div><div class=\"rec-m\">BibTeX \u00b7 RIS</div></div>\n            </div>\n          </div>\n          <div class=\"note warn\"><b>Two things to do before you publish.</b> Verify the PRISMA counts against your own records \u2014 they reflect what you did in the app, but the numbers in your paper are your responsibility. And export a JSON backup regularly: your review lives in this browser profile only, so clearing browser data or switching machines without a backup loses it.</div>\n        </section>\n\n      </div>\n\n      <div class=\"transport\">\n        <button class=\"btn primary\" id=\"gwPlay\" aria-label=\"Play or pause the walkthrough\">\u23f8 Pause</button>\n        <button class=\"btn\" id=\"gwPrev\" aria-label=\"Previous step\">\u2190 Back</button>\n        <button class=\"btn\" id=\"gwNext\" aria-label=\"Next step\">Next \u2192</button>\n        <span class=\"counter\" id=\"gwCount\">01 / 08</span>\n      </div>\n    </div>\n\n    <!-- ============ SIDEBAR ============ -->\n    <aside class=\"side\">\n      <div>\n        <h3>Steps</h3>\n        <ul class=\"chaplist\" id=\"gwChaps\"></ul>\n      </div>\n\n      <div>\n        <h3>Records flowing through</h3>\n        <div class=\"funnel\" id=\"gwFunnel\">\n          <div class=\"fstep\" data-max=\"1000\">\n            <div class=\"flabel\"><span>Imported</span><b>0</b></div>\n            <div class=\"fbar\"><i></i></div>\n          </div>\n          <div class=\"fstep excluded\" data-max=\"1000\">\n            <div class=\"flabel\"><span>Duplicates removed</span><b>0</b></div>\n            <div class=\"fbar\"><i></i></div>\n          </div>\n          <div class=\"fstep excluded\" data-max=\"1000\">\n            <div class=\"flabel\"><span>Excluded \u00b7 Stage 1</span><b>0</b></div>\n            <div class=\"fbar\"><i></i></div>\n          </div>\n          <div class=\"fstep excluded\" data-max=\"1000\">\n            <div class=\"flabel\"><span>Excluded \u00b7 Stage 2</span><b>0</b></div>\n            <div class=\"fbar\"><i></i></div>\n          </div>\n          <div class=\"fstep final\" data-max=\"1000\">\n            <div class=\"flabel\"><span>Included</span><b>0</b></div>\n            <div class=\"fbar\"><i></i></div>\n          </div>\n          <p class=\"fnote\">An illustrative corpus of 1,000 records, narrowing as the walkthrough advances. Your own counts appear on the Export tab.</p>\n        </div>\n      </div>\n    </aside>\n\n  </div><p class=\"gw-foot\">Keyboard: <kbd>Space</kbd> play/pause \u00b7 <kbd>\u2190</kbd> <kbd>\u2192</kbd> step \u00b7 <kbd>1</kbd>\u2013<kbd>8</kbd> jump to a step \u00b7 <kbd>Esc</kbd> close. This walkthrough is built into Shodh \u2014 it needs no other file and no network connection.</p></div>";
+function openGuide() {
+  if (GUIDE.open) return;
+  var body = document.createElement('div');
+  body.innerHTML = GUIDE_HTML;
+  var close = openModal('Guided walkthrough \u00b7 Shodh v1.0.0', body);
+  var overlay = document.querySelector('.modal-overlay');
+  var mo = overlay ? overlay.querySelector('.modal') : null;
+  if (mo) mo.classList.add('gw-modal');
+  GUIDE.open = true;
+  function shut() {
+    if (!GUIDE.open) return;
+    if (GUIDE.teardown) { GUIDE.teardown(); GUIDE.teardown = null; }
+    GUIDE.open = false;
+    close();
+  }
+  // route the modal's own close paths through teardown so timers stop
+  if (overlay) {
+    overlay.onclick = function (e) { if (e.target === overlay) shut(); };
+    var x = overlay.querySelector('.modal-x');
+    if (x) x.onclick = shut;
+  }
+  try { GUIDE.teardown = gwInit(body, shut); }
+  catch (err) { GUIDE.open = false; close(); toast('Could not start the walkthrough'); }
+}
+function guideButton(small) {
+  return h('button', {
+    class: small ? 'btn sm' : 'btn',
+    title: 'Open the eight-step guided walkthrough in a new tab',
+    onclick: openGuide
+  }, ['\u25b6 Guided walkthrough']);
+}
+
 function viewDashboard(v) {
   // first run: no reviews at all -> creation form
   if (!S.project && PROJECTS.length === 0) {
     v.appendChild(h('h2', { class: 'section', text: 'Start your first review' }));
     v.appendChild(h('p', { class: 'lede', text: 'Name the review and state the question it answers. You can create as many separate reviews as you like — each keeps its own records, decisions, and PDFs.' }));
     v.appendChild(createReviewForm(null));
-    v.appendChild(h('p', { class: 'muted', style: 'margin-top:14px;font-size:13px', text: 'The demo dataset is 9 synthetic records (clearly labelled, not real papers) with planted duplicates so you can try the whole workflow immediately.' }));
+    v.appendChild(h('p', { class: 'muted', style: 'margin-top:18px;font-size:13px' }, [
+      h('span', { text: 'New to systematic reviews, or to Shodh? ' }),
+      h('span', { text: 'The guided walkthrough covers the whole workflow in about a minute.' })
+    ]));
+    v.appendChild(h('div', { class: 'inline-actions', style: 'margin-top:8px' }, [guideButton(true)]));
     return;
   }
 
   // reviews list (multi-project)
   v.appendChild(h('div', { style: 'display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px' }, [
     h('h2', { class: 'section', style: 'margin:0', text: 'Your reviews' }),
-    h('button', { class: 'btn sm primary', style: 'margin-left:auto', onclick: newReviewModal }, ['＋ New review'])
+    h('div', { style: 'margin-left:auto;display:flex;gap:8px;flex-wrap:wrap' }, [
+      guideButton(true),
+      h('button', { class: 'btn sm primary', onclick: newReviewModal }, ['＋ New review'])
+    ])
   ]));
   v.appendChild(reviewsList());
 
@@ -1474,9 +1508,9 @@ function reviewsList() {
 }
 
 function createReviewForm(onDone) {
-  var name = h('input', { placeholder: 'e.g. Tool wear prediction in dry turning of stainless steels', maxlength: '160' });
-  var q = h('textarea', { rows: '3', placeholder: 'e.g. Which signal-based methods predict flank wear in dry turning of austenitic stainless steels?' });
-  var revIn = h('input', { placeholder: 'Your name — recorded on every decision you make', maxlength: '60' });
+  var name = h('input', { placeholder: 'e.g. Title of your research topic', maxlength: '160' });
+  var q = h('textarea', { rows: '3', placeholder: 'e.g. What evidence are you trying to identify or compare?' });
+  var revIn = h('input', { placeholder: 'e.g. Your name — recorded on every decision you make', maxlength: '60' });
   var typeSel = selEl(REVIEW_TYPES.map(function (t) { return [t, t]; }), 'Systematic Review', function () {});
   var domSel = selEl(REVIEW_DOMAINS.map(function (d) { return [d, d]; }), 'Not Applicable', function () {});
   typeSel.style.width = '100%'; domSel.style.width = '100%';
@@ -1491,8 +1525,8 @@ function createReviewForm(onDone) {
       h('div', { class: 'field' }, [h('label', { text: 'Review type' }), typeSel]),
       h('div', { class: 'field' }, [h('label', { text: 'Review domain' }), domSel])
     ]),
-    h('div', { class: 'field' }, [h('label', { text: 'Reviewer 1 (you)' }), revIn]),
-    h('div', { class: 'inline-actions' }, [start, onDone ? null : h('button', { class: 'btn ghost', onclick: loadSampleProject }, ['Load demo dataset'])])
+    h('div', { class: 'field' }, [h('label', { text: 'Reviewer Name' }), revIn]),
+    h('div', { class: 'inline-actions' }, [start])
   ];
   return h('div', { class: onDone ? '' : 'panel panel-pad', style: onDone ? '' : 'max-width:640px' }, kids);
 }
@@ -1674,19 +1708,6 @@ function selEl(pairs, current, onchange) {
   });
   return s;
 }
-function loadSampleProject() {
-  S.projectId = newProjectId();
-  S.project = { name: 'Demo — signal-based tool wear & machining review', question: 'Which signal-based methods predict tool wear or surface quality in machining of difficult-to-cut materials?', type: 'Systematic Review', domain: 'Mechanical / Manufacturing', createdAt: Date.now() };
-  S.refs = LR.sampleRefs();
-  S.reviewers = [{ id: 'rev1', name: 'Reviewer 1' }, { id: 'rev2', name: 'Reviewer 2' }];
-  S.activeReviewer = 'rev1';
-  S.settings = { required: 2, llm: (S.settings && S.settings.llm) ? S.settings.llm : { url: 'http://localhost:11434', model: '', enabled: false } };
-  resetTransientState();
-  markDuplicatesAuto();
-  recomputeVerdicts(); persist();
-  refreshProjects().then(function () { go('dedupe'); });
-  toast('Demo dataset loaded — 9 synthetic records');
-}
 
 // ================= IMPORT =================
 function viewImport(v) {
@@ -1795,7 +1816,7 @@ function restoreFromJSON(text) {
   S.projectId = newProjectId();
   S.project = d.project;
   S.refs = d.refs;
-  S.reviewers = (d.reviewers && d.reviewers.length) ? d.reviewers : [{ id: 'rev1', name: 'Reviewer 1' }];
+  S.reviewers = (d.reviewers && d.reviewers.length) ? d.reviewers : [{ id: 'rev1', name: 'Reviewer' }];
   S.activeReviewer = S.reviewers[0].id;
   S.settings = d.settings || { required: 1 };
   if (!S.settings.llm) S.settings.llm = keepLlm;
@@ -1972,12 +1993,12 @@ function highlightAbstract(text, terms) {
 function viewScreen(v) {
   if (!S.project) { requireProject(v); return; }
   buildScreenQueue();
+  v.appendChild(h('h2', { class: 'section', text: 'Stage 1 \u00b7 Title screening' }));
+  v.appendChild(h('p', { class: 'lede', html: 'Screen each record on its title, authors, and journal \u2014 decide with <kbd>I</kbd> (include) / <kbd>E</kbd> (exclude) / <kbd>M</kbd> (maybe). Records you include move to Stage 2 for full-text assessment. Abstracts are shown at Stage 2.' }));
   if (!SCREEN.queue.length) {
-    v.appendChild(emptyBlock('Nothing left to screen', 'You (' + reviewerName(S.activeReviewer) + ') have voted on every record. Switch reviewer on the Desk, resolve conflicts, or move to full text.', [
+    v.appendChild(emptyBlock('Nothing left to screen', reviewerName(S.activeReviewer) + ' has voted on every record. Switch reviewer on the Desk, resolve conflicts, or move to full text.', [
       { label: 'Resolve conflicts', route: 'conflicts' }, { label: 'Full-text stage', route: 'fulltext' }
     ]));
-    var doneList = screenDecidedList();
-    if (doneList) v.appendChild(doneList);
     return;
   }
   var idx = Math.min(SCREEN.idx, SCREEN.queue.length - 1);
@@ -2015,8 +2036,6 @@ function viewScreen(v) {
 
   v.appendChild(h('div', { class: 'screen-wrap' }, [h('div', {}, [card, blindNote]), actions]));
   v.appendChild(h('p', { class: 'muted', style: 'font-size:12px;margin-top:16px', html: 'Keyboard: <kbd>→</kbd>/<kbd>I</kbd> include · <kbd>←</kbd>/<kbd>E</kbd> exclude · <kbd>↓</kbd>/<kbd>M</kbd> maybe · <kbd>U</kbd> undo. The queue is re-ordered by a lightweight relevance model once you\u2019ve made enough decisions — it never hides unscreened records.' }));
-  var doneList2 = screenDecidedList();
-  if (doneList2) v.appendChild(doneList2);
 }
 function vote(r, choice) {
   r.decisions[S.activeReviewer] = { vote: choice, at: Date.now() };
@@ -2035,6 +2054,7 @@ function undoVote() {
 }
 document.addEventListener('keydown', function (e) {
   if (ROUTE !== 'screen') return;
+  if (document.querySelector('.modal-overlay')) return;   // a dialog is open
   var tag = (e.target.tagName || '').toLowerCase();
   if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
   if (!SCREEN.queue.length) return;
@@ -2078,15 +2098,23 @@ var EXCLUSION_REASONS = [
 ];
 
 // ================= CONFLICTS =================
+var CONFLICT = { idx: 0, last: null, queue: [] };
 function viewConflicts(v) {
   if (!S.project) { requireProject(v); return; }
   recomputeVerdicts();
   var items = activeRefs().filter(function (r) { return !r.final && (r.verdict === 'conflict' || r.verdict === 'maybe'); });
   v.appendChild(h('h2', { class: 'section', text: 'Conflict resolution' }));
   v.appendChild(h('p', { class: 'lede', html: 'Records where screeners disagreed (<b>Include vs Exclude</b>) or where anyone chose <b>Maybe</b>. Votes are revealed here so an adjudicator can make the call. The adjudicated decision overrides the individual votes and feeds the PRISMA flow.' }));
-  if (!items.length) { v.appendChild(emptyBlock('No conflicts', 'Nothing is waiting on adjudication. Records resolve here only when screeners disagree or defer.', [{ label: 'Back to Desk', route: 'dashboard' }])); return; }
+  if (!items.length) { CONFLICT.queue = []; v.appendChild(emptyBlock('No conflicts', 'Nothing is waiting on adjudication. Records resolve here only when screeners disagree or defer.', [{ label: 'Back to Desk', route: 'dashboard' }])); return; }
 
-  items.forEach(function (r) {
+  // keep the keyboard focus in range as the list shrinks
+  CONFLICT.queue = items;
+  if (CONFLICT.idx > items.length - 1) CONFLICT.idx = items.length - 1;
+  if (CONFLICT.idx < 0) CONFLICT.idx = 0;
+
+  v.appendChild(h('p', { class: 'muted', style: 'font-size:12px;margin:-6px 0 16px', html: 'Keyboard: <kbd>I</kbd> include \u00b7 <kbd>E</kbd> exclude \u00b7 <kbd>\u2191</kbd>/<kbd>\u2193</kbd> or <kbd>J</kbd>/<kbd>K</kbd> move between records \u00b7 <kbd>U</kbd> undo. The outlined card is the one your keystroke will resolve.' }));
+
+  items.forEach(function (r, i) {
     var voteChips = Object.keys(r.decisions).map(function (id) {
       var d = r.decisions[id];
       return h('div', { style: 'display:flex;align-items:center;gap:8px' }, [
@@ -2094,11 +2122,15 @@ function viewConflicts(v) {
         stampFor(d.vote)
       ]);
     });
-    var card = h('div', { class: 'panel panel-pad', style: 'margin-bottom:14px' }, [
+    var isFocused = (i === CONFLICT.idx);
+    var card = h('div', { class: 'panel panel-pad conf-card' + (isFocused ? ' focused' : ''), style: 'margin-bottom:14px', onclick: function () {
+      if (CONFLICT.idx !== i) { CONFLICT.idx = i; render(); }
+    } }, [
       h('div', { class: 'rec-meta' }, [
         stampFor(r.verdict),
         r.year ? h('span', { text: r.year } ) : null,
-        h('span', { class: 'src', text: r.source || 'record' })
+        h('span', { class: 'src', text: r.source || 'record' }),
+        h('span', { class: 'conf-marker', text: '\u25b8 keyboard focus' })
       ]),
       h('div', { style: 'font-family:var(--serif);font-size:18px;font-weight:600;line-height:1.3;margin-bottom:6px', text: r.title }),
       r.journal ? h('div', { class: 'rec-journal', text: r.journal }) : null,
@@ -2110,14 +2142,53 @@ function viewConflicts(v) {
         h('button', { class: 'btn sm', style: 'border-color:var(--exc);color:var(--exc)', onclick: function () { adjudicate(r, 'exclude'); } }, ['Resolve → Exclude'])
       ])
     ]);
+    if (isFocused) CONFLICT.el = card;
     v.appendChild(card);
   });
+
+  // bring the focused card into view after the DOM settles
+  setTimeout(function () {
+    if (CONFLICT.el && CONFLICT.el.scrollIntoView) {
+      CONFLICT.el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }, 0);
 }
 function adjudicate(r, vote) {
   r.final = { vote: vote, by: S.activeReviewer, at: Date.now() };
-  r.verdict = vote; persist(); render();
-  toast('Resolved as ' + vote);
+  r.verdict = vote;
+  CONFLICT.last = { id: r.id };
+  persist(); render();
+  toast('Resolved as ' + vote + ' \u2014 press U to undo');
 }
+function undoAdjudicate() {
+  if (!CONFLICT.last) { toast('Nothing to undo'); return; }
+  var r = S.refs.find(function (x) { return x.id === CONFLICT.last.id; });
+  if (r) { r.final = null; r.verdict = LR.computeVerdict(r, S.settings.required); }
+  CONFLICT.last = null; persist(); render();
+  toast('Adjudication undone');
+}
+function conflictMove(delta) {
+  if (!CONFLICT.queue.length) return;
+  CONFLICT.idx = Math.max(0, Math.min(CONFLICT.queue.length - 1, CONFLICT.idx + delta));
+  render();
+}
+// ---- Conflicts keyboard shortcuts (I / E / U / navigation) ----
+document.addEventListener('keydown', function (e) {
+  if (ROUTE !== 'conflicts') return;
+  if (document.querySelector('.modal-overlay')) return;
+  var tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (!CONFLICT.queue.length) return;
+  var r = CONFLICT.queue[Math.min(CONFLICT.idx, CONFLICT.queue.length - 1)];
+  if (!r) return;
+  var k = e.key.toLowerCase();
+  if (k === 'i') { e.preventDefault(); adjudicate(r, 'include'); }
+  else if (k === 'e') { e.preventDefault(); adjudicate(r, 'exclude'); }
+  else if (k === 'u') { e.preventDefault(); undoAdjudicate(); }
+  else if (e.key === 'ArrowDown' || k === 'j') { e.preventDefault(); conflictMove(1); }
+  else if (e.key === 'ArrowUp'   || k === 'k') { e.preventDefault(); conflictMove(-1); }
+});
 function stampFor(verdict) {
   var map = { include: ['inc', 'Include'], exclude: ['exc', 'Exclude'], maybe: ['may', 'Maybe'], conflict: ['con', 'Conflict'] };
   var m = map[verdict];
@@ -2201,7 +2272,7 @@ function viewFullText(v) {
     // focus the card so I/E work immediately (not the keyword input)
     setTimeout(function () { var c = el('ftCard'); if (c && (!document.activeElement || document.activeElement === document.body)) { try { c.focus({ preventScroll: true }); } catch (e) { c.focus(); } } }, 0);
   } else {
-    v.appendChild(h('div', { class: 'callout', html: 'All ' + all.length + ' full-text record(s) are decided. Search and review them below, or head to <b>Export</b> for the PRISMA diagram and your files.' }));
+    v.appendChild(h('div', { class: 'callout', html: 'All ' + all.length + ' full-text record(s) are decided. Review them below, or export from the PRISMA tab.' }));
   }
   var dec = ftDecided();
   if (dec.length) v.appendChild(decidedList(dec));
@@ -2277,17 +2348,11 @@ function currentSelectionIn(rootSel) {
   } catch (e) { return ''; }
 }
 function openNoteModal(r, quote, sourceLabel) {
-  var ta = h('textarea', { rows: '4', style: 'width:100%' });
-  ta.value = quote || '';
-  ta.placeholder = quote ? 'Edit or add to the selected text\u2026' : 'Your note\u2026';
-  var quoteHint = quote
-    ? h('div', { style: 'font-size:11px;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin-bottom:6px',
-               text: 'Selected text \u2014 edit below or save as-is' })
-    : null;
+  var ta = h('textarea', { rows: '4', placeholder: 'Your note\u2026', style: 'width:100%' });
   var body = h('div', {}, [
     h('div', { style: 'font-family:var(--serif);font-size:15px;font-weight:600;margin-bottom:10px', text: r.title }),
-    quoteHint,
-    h('div', { class: 'field' }, [ta]),
+    quote ? h('div', { style: 'font-size:12.5px;color:var(--muted);font-style:italic;border-left:3px solid var(--rule);padding:6px 10px;margin-bottom:10px', text: '\u201c' + quote + '\u201d' }) : null,
+    h('div', { class: 'field' }, [h('label', { text: 'Note' }), ta]),
     h('div', { class: 'inline-actions' }, [
       h('button', { class: 'btn primary', onclick: function () {
         var txt = ta.value.trim();
@@ -2298,11 +2363,8 @@ function openNoteModal(r, quote, sourceLabel) {
       h('button', { class: 'btn ghost', onclick: function () { close(); } }, ['Cancel'])
     ])
   ]);
-  var close = openModal(quote ? 'Save selection as note' : 'Add note', body);
-  setTimeout(function () {
-    try { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }
-    catch (e) {}
-  }, 0);
+  var close = openModal('Add note', body);
+  setTimeout(function () { try { ta.focus(); } catch (e) {} }, 0);
 }
 function addNote(r, text, quote, sourceLabel) {
   if (!r.notes) r.notes = [];
@@ -2316,24 +2378,15 @@ function selContext(sel) {
   var node = sel.anchorNode;
   var el2 = node && (node.nodeType === 1 ? node : node.parentNode);
   if (!el2 || !el2.closest) return null;
-  // Stage 2 pending paper card
   if (ROUTE === 'fulltext' && el2.closest('#ftCard')) {
     var comp = ftCompute(); var cur = ftCurrent(comp.pending);
-    if (cur) return { ref: cur, label: 'Stage 2 · abstract' };
+    if (cur) return { ref: cur, label: 'Stage 2 \u00b7 abstract' };
   }
-  // Decided-list rows that have data-ref-id (Stage 1 or Stage 2)
-  var refRow = el2.closest('[data-ref-id]');
-  if (refRow) {
-    var rid = refRow.getAttribute('data-ref-id');
-    var rref = S.refs.find(function (x) { return x.id === rid; });
-    if (rref) return { ref: rref, label: (ROUTE === 'fulltext' ? 'Stage 2' : 'Stage 1') + ' · decided' };
-  }
-  // Ask page source quote pane
   if (ROUTE === 'ask' && el2.closest('.src-quote')) {
     var s2 = ASK.activeSrc;
     if (s2) {
       var ref = S.refs.find(function (x) { return x.id === s2.refId; });
-      if (ref) return { ref: ref, label: s2.kind === 'pdf' ? 'Ask · PDF p.' + s2.page : 'Ask · abstract' };
+      if (ref) return { ref: ref, label: s2.kind === 'pdf' ? 'Ask \u00b7 PDF p.' + s2.page : 'Ask \u00b7 abstract' };
     }
   }
   return null;
@@ -2342,7 +2395,7 @@ document.addEventListener('mouseup', function () {
   setTimeout(function () {
     try {
       hideSelBtn();
-      if (ROUTE !== 'fulltext' && ROUTE !== 'ask' && ROUTE !== 'screen') return;
+      if (ROUTE !== 'fulltext' && ROUTE !== 'ask') return;
       var sel = window.getSelection && window.getSelection();
       if (!sel || sel.isCollapsed || !String(sel.toString()).trim()) return;
       var info = selContext(sel);
@@ -2350,17 +2403,7 @@ document.addEventListener('mouseup', function () {
       var rect = sel.getRangeAt(0).getBoundingClientRect();
       if (!rect || (!rect.width && !rect.height)) return;
       var q = String(sel.toString()).trim().slice(0, 600);
-      // Centre button above the selection
-      var bLeft = Math.max(8, Math.round(rect.left + rect.width / 2) - 52);
-      var bTop  = Math.max(8, Math.round(rect.top) - 44);
-      _selBtn = h('button', {
-        class: 'btn sm primary',
-        title: 'Save selection as note',
-        style: 'position:fixed;z-index:9999;left:' + bLeft + 'px;top:' + bTop + 'px;'
-             + 'min-width:104px;padding:5px 12px;font-size:12px;font-weight:600;'
-             + 'box-shadow:0 3px 10px rgba(0,0,0,.28);border-radius:4px;white-space:nowrap',
-        onclick: function () { hideSelBtn(); openNoteModal(info.ref, q, info.label); }
-      }, ['+ Note']);
+      _selBtn = h('button', { class: 'btn sm primary', style: 'position:fixed;z-index:70;left:' + Math.max(8, rect.left) + 'px;top:' + Math.max(8, rect.top - 36) + 'px', onclick: function () { hideSelBtn(); openNoteModal(info.ref, q, info.label); } }, ['+ Note']);
       document.body.appendChild(_selBtn);
     } catch (e) {}
   }, 10);
@@ -2512,145 +2555,23 @@ function updateFT() {
   var card = el('ftCard');
   if (card) { card.innerHTML = ''; card.appendChild(renderFTCard(ftCurrent(comp.pending), comp)); }
 }
-// ---------- searchable decided lists (Stage 1 & Stage 2) ----------
-// Records already decided can be found by typing any part of the title,
-// author, journal, year or DOI, and put back for re-review with Reset.
-var LIST_CAP = 60;                 // rows drawn at once; search narrows further
-var LISTUI = {};                   // per-list UI state, survives re-renders
-function listState(key) {
-  if (!LISTUI[key]) LISTUI[key] = { open: false, q: '', focus: false };
-  return LISTUI[key];
-}
-var SEARCH_BLOBS = {};             // id -> lowercased text; never stored on the record
-function recSearchBlob(r) {
-  var cached = SEARCH_BLOBS[r.id];
-  if (cached !== undefined) return cached;
-  var blob = ((r.title || '') + ' ' + (r.authors || []).join(' ') + ' ' +
-    (r.journal || '') + ' ' + (r.year || '') + ' ' + (r.doi || '') + ' ' +
-    ((r.keywords || []).join(' '))).toLowerCase();
-  SEARCH_BLOBS[r.id] = blob;
-  return blob;
-}
-function recMatchesQuery(r, q) {
-  if (!q) return true;
-  var blob = recSearchBlob(r);
-  var terms = q.split(/\s+/);
-  for (var i = 0; i < terms.length; i++) {
-    if (terms[i] && blob.indexOf(terms[i]) < 0) return false;   // all terms must match
-  }
-  return true;
-}
-function recMetaLine(r) {
-  var bits = [];
-  if (r.authors && r.authors.length) {
-    bits.push(r.authors.slice(0, 2).join('; ') + (r.authors.length > 2 ? ' et al.' : ''));
-  }
-  if (r.year) bits.push(String(r.year));
-  if (r.journal) bits.push(r.journal);
-  return bits.join(' \u00b7 ');
-}
-function searchableRecordList(cfg) {
-  // cfg: { key, label, records, row(r), hint }
-  var st = listState(cfg.key);
-  var det = h('details', { style: 'margin-top:22px' });
-  det.open = st.open;
-  det.appendChild(h('summary', { class: 'mono', style: 'cursor:pointer;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)' },
-    [cfg.label + ' (' + cfg.records.length + ')']));
-  det.addEventListener('toggle', function () { st.open = det.open; });
-
-  var search = h('input', {
-    type: 'search', value: st.q, placeholder: '\u2315  Search title, author, journal, year or DOI\u2026',
-    style: 'width:100%;margin:12px 0 6px'
-  });
-  var count = h('div', { class: 'mono muted', style: 'font-size:11px;margin-bottom:8px' });
-  var list = h('div', { class: 'rowlist' });
-
-  function paint() {
-    var q = String(search.value || '').trim().toLowerCase();
-    st.q = search.value;
-    var matches = q ? cfg.records.filter(function (r) { return recMatchesQuery(r, q); }) : cfg.records;
-    list.innerHTML = '';
-    matches.slice(0, LIST_CAP).forEach(function (r) { list.appendChild(cfg.row(r)); });
-    if (!cfg.records.length) count.textContent = '';
-    else if (!matches.length) count.textContent = 'No records match \u2014 try fewer words, or part of a name';
-    else if (matches.length > LIST_CAP) count.textContent = 'Showing first ' + LIST_CAP + ' of ' + matches.length + ' matches \u2014 keep typing to narrow';
-    else count.textContent = matches.length + (q ? ' match' + (matches.length === 1 ? '' : 'es') : ' record' + (matches.length === 1 ? '' : 's'));
-  }
-  search.addEventListener('input', paint);
-  search.addEventListener('focus', function () { st.focus = true; });
-  search.addEventListener('blur', function () { st.focus = false; });
-
-  if (cfg.records.length >= 5) { det.appendChild(search); det.appendChild(count); }
-  if (cfg.hint) det.appendChild(h('p', { class: 'muted', style: 'font-size:12px;margin:2px 0 10px', text: cfg.hint }));
-  det.appendChild(list);
-  paint();
-
-  // keep the caret where it was when a Reset triggers a full re-render
-  if (st.open && st.focus) {
-    setTimeout(function () {
-      try { search.focus(); search.setSelectionRange(search.value.length, search.value.length); } catch (e) {}
-    }, 0);
-  }
-  return det;
-}
-
 function decidedList(dec) {
-  return searchableRecordList({
-    key: 'ft',
-    label: 'Decided at full text',
-    records: dec,
-    hint: 'Reset puts a paper back into the Stage 2 queue for re-review.',
-    row: function (r) {
-      var sub = (r.ft.via === 'keyword-rule' ? 'by keyword rule \u00b7 ' : '') + (r.ft.reason || '');
-      var meta = recMetaLine(r);
-      return h('div', { class: 'row', 'data-ref-id': r.id }, [
-        h('div', { class: 'rgrow' }, [
-          h('div', { class: 'rtitle', text: r.title }),
-          meta ? h('div', { class: 'rsub', text: meta }) : null,
-          sub  ? h('div', { class: 'rsub', text: sub  }) : null,
-          r.abstract ? h('div', { class: 'rec-abstract', style: 'font-size:12.5px;margin:6px 0 0;color:var(--text);opacity:.85;cursor:text', text: r.abstract }) : null
-        ]),
-        stampFor(r.ft.vote),
-        h('button', { class: 'btn sm ghost', onclick: function () { r.ft = null; persist(); render(); toast('Back in the Stage 2 queue'); } }, ['Reset'])
-      ]);
-    }
+  var det = h('details', { style: 'margin-top:22px' }, [
+    h('summary', { class: 'mono', style: 'cursor:pointer;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)' }, ['Decided at full text (' + dec.length + ')'])
+  ]);
+  var list = h('div', { class: 'rowlist', style: 'margin-top:10px' });
+  dec.forEach(function (r) {
+    list.appendChild(h('div', { class: 'row' }, [
+      h('div', { class: 'rgrow' }, [
+        h('div', { class: 'rtitle', text: r.title }),
+        h('div', { class: 'rsub', text: (r.ft.via === 'keyword-rule' ? 'by keyword rule · ' : '') + (r.ft.reason || '') })
+      ]),
+      stampFor(r.ft.vote),
+      h('button', { class: 'btn sm ghost', onclick: function () { r.ft = null; persist(); render(); } }, ['Reset'])
+    ]));
   });
-}
-
-// Stage 1: your own decided records, searchable, with Reset to re-screen.
-// Shows only the active reviewer's votes so blind dual screening is preserved.
-function screenDecidedList() {
-  var mine = activeRefs().filter(function (r) {
-    var d = r.decisions[S.activeReviewer];
-    return d && d.vote;
-  }).sort(function (a, b) {
-    return (b.decisions[S.activeReviewer].at || 0) - (a.decisions[S.activeReviewer].at || 0);
-  });
-  if (!mine.length) return null;
-  return searchableRecordList({
-    key: 'screen',
-    label: 'Your Stage 1 decisions',
-    records: mine,
-    hint: 'Excluded something by mistake? Search for it and press Reset \u2014 it goes back into your Stage 1 queue. Only your own votes are shown, so blind screening stays intact.',
-    row: function (r) {
-      var d = r.decisions[S.activeReviewer];
-      var meta = recMetaLine(r);
-      return h('div', { class: 'row', 'data-ref-id': r.id }, [
-        h('div', { class: 'rgrow' }, [
-          h('div', { class: 'rtitle', text: r.title }),
-          meta ? h('div', { class: 'rsub', text: meta }) : null,
-          r.abstract ? h('div', { class: 'rec-abstract', style: 'font-size:12.5px;margin:6px 0 0;color:var(--text);opacity:.85;cursor:text', text: r.abstract }) : null
-        ]),
-        stampFor(d.vote),
-        h('button', { class: 'btn sm ghost', onclick: function () {
-          delete r.decisions[S.activeReviewer];
-          r.verdict = LR.computeVerdict(r, S.settings.required);
-          if (SCREEN.lastActed && SCREEN.lastActed.id === r.id) SCREEN.lastActed = null;
-          persist(); render(); toast('Back in your Stage 1 queue');
-        } }, ['Reset'])
-      ]);
-    }
-  });
+  det.appendChild(list);
+  return det;
 }
 // full-text keyboard: I / E / S / U — arrows are NEVER intercepted (they scroll)
 document.addEventListener('keydown', function (e) {
@@ -3141,13 +3062,104 @@ function prismaSection() {
 }
 
 // ================= EXPORT =================
+// ================= CITE SHODH (app self-citation) =================
+// Version and publication metadata for citing the application itself.
+// PLACEHOLDERS: fill AUTHOR / URL / DOI once the repository is public and a
+// Zenodo DOI has been minted. Nothing here is invented — unset fields are
+// clearly marked so they cannot be pasted into a manuscript by accident.
+var SHODH_META = {
+  version: '1.0.0',
+  title: 'Shodh: An offline literature-review desk for systematic reviews',
+  author: 'Namboodri, Tanuj',
+  year: '2026',            // year of THIS release, not the current year
+  url: 'https://github.com/AlienAvatar003/Shodh',
+  doi: '10.5281/zenodo.21499303',
+  license: 'Apache-2.0'
+};
+function citeField(val, placeholder) {
+  return (val && String(val).trim()) ? String(val).trim() : placeholder;
+}
+function shodhBibTeX() {
+  var M = SHODH_META;
+  var L = [];
+  L.push('@software{shodh' + M.year + ',');
+  L.push('  author   = {' + citeField(M.author, '<<ADD AUTHOR NAME>>') + '},');
+  L.push('  title    = {{' + M.title + '}},');
+  L.push('  version  = {' + M.version + '},');
+  L.push('  year     = {' + M.year + '},');
+  L.push('  license  = {' + M.license + '},');
+  L.push('  url      = {' + citeField(M.url, '<<ADD REPOSITORY URL>>') + '}' + (M.doi ? ',' : ''));
+  if (M.doi) L.push('  doi      = {' + M.doi + '}');
+  L.push('}');
+  L.push('');
+  L.push('% Generated by Shodh v' + M.version + '.');
+  L.push('% Replace any <<PLACEHOLDER>> before using this in a manuscript.');
+  return L.join('\n');
+}
+function shodhRIS() {
+  var M = SHODH_META;
+  var L = [];
+  L.push('TY  - COMP');
+  L.push('TI  - ' + M.title);
+  L.push('AU  - ' + citeField(M.author, '<<ADD AUTHOR NAME>>'));
+  L.push('PY  - ' + M.year);
+  L.push('ET  - Version ' + M.version);
+  L.push('UR  - ' + citeField(M.url, '<<ADD REPOSITORY URL>>'));
+  if (M.doi) L.push('DO  - ' + M.doi);
+  L.push('N1  - Software. Licensed under ' + M.license + '.');
+  L.push('N1  - Replace any <<PLACEHOLDER>> before using in a manuscript.');
+  L.push('ER  - ');
+  L.push('');
+  return L.join('\n');
+}
+function shodhCitationText() {
+  var M = SHODH_META;
+  return citeField(M.author, '<<ADD AUTHOR NAME>>') + ' (' + M.year + '). ' +
+    M.title + ' (Version ' + M.version + ') [Computer software]. ' +
+    (M.doi ? 'https://doi.org/' + M.doi : citeField(M.url, '<<ADD REPOSITORY URL>>'));
+}
+function citeShodhModal() {
+  var M = SHODH_META;
+  var pending = (!M.author || !M.url);
+  var box = h('div', {}, [
+    h('p', { class: 'lede', style: 'margin-top:0', text: 'If Shodh helped you run this review, please cite it in your paper. Choose a format below.' }),
+    pending ? h('div', { class: 'callout', style: 'margin-bottom:14px', html:
+      '<b>This copy has no author or repository URL set yet.</b> The files below will contain <code>&lt;&lt;PLACEHOLDER&gt;&gt;</code> markers where those values belong. Fill them in before pasting a citation into a manuscript \u2014 do not submit a reference containing a placeholder.' }) : null,
+    h('div', { class: 'mono muted', style: 'font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin:6px 0 10px', text: 'Plain-text citation' }),
+    h('div', { class: 'panel panel-pad', style: 'font-size:13px;line-height:1.65;word-break:break-word' }, [
+      h('span', { text: shodhCitationText() })
+    ]),
+    h('div', { class: 'inline-actions', style: 'margin-top:10px' }, [
+      h('button', { class: 'btn sm', onclick: function () {
+        try {
+          navigator.clipboard.writeText(shodhCitationText());
+          toast('Citation copied to clipboard');
+        } catch (e) { toast('Copy failed \u2014 select the text manually'); }
+      } }, ['Copy citation text'])
+    ]),
+    h('div', { class: 'divider' }),
+    h('div', { class: 'mono muted', style: 'font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin:6px 0 12px', text: 'Download for your reference manager' }),
+    h('div', { class: 'grid g2' }, [
+      exportCard('BibTeX (.bib)', 'LaTeX \u00b7 Zotero \u00b7 JabRef \u00b7 Mendeley', function () {
+        download('shodh_citation.bib', shodhBibTeX(), 'application/x-bibtex');
+      }),
+      exportCard('RIS (.ris)', 'EndNote \u00b7 Zotero \u00b7 Mendeley', function () {
+        download('shodh_citation.ris', shodhRIS(), 'application/x-research-info-systems');
+      })
+    ]),
+    h('p', { class: 'muted', style: 'font-size:12.5px;margin-top:16px', html:
+      'Shodh v' + M.version + ' \u00b7 licensed under ' + M.license + '. A permanent DOI can be minted free via Zenodo once the repository is public \u2014 see <code>docs/CITING.md</code> in the repository for the full procedure.' })
+  ]);
+  openModal('Cite Shodh', box);
+}
+
 function viewExport(v) {
   if (!S.project) { requireProject(v); return; }
   recomputeVerdicts();
   var c = LR.prismaCounts(S.refs);
   var out = LR.prismaSVG(c, new Date().toISOString().slice(0, 10));
   v.appendChild(h('h2', { class: 'section', text: 'Export' }));
-  v.appendChild(h('p', { class: 'lede', text: 'Download your selected studies for a reference manager, plus the review artefacts and PRISMA diagram. Everything is generated on your machine.' }));
+  v.appendChild(h('p', { class: 'lede', text: 'Download your selected studies for a reference manager, plus the review artefacts and PRISMA diagram. You can also download your notes with the full paper details of each record attached. Everything is generated on your machine.' }));
 
   v.appendChild(prismaSection());
   v.appendChild(h('div', { class: 'divider' }));
@@ -3181,7 +3193,7 @@ function viewExport(v) {
       included.forEach(function (r) { rows.push([r.id, r.title, r.authors.join('; '), r.year, r.journal, r.doi, r.abstract, '', '', '']); });
       download(slug() + '_extraction.csv', LR.toCSV(rows), 'text/csv');
     }),
-    exportCard('Notes — TXT', (function () { var n = 0, p = 0; S.refs.forEach(function (r) { var k = (r.notes || []).length; if (k) { p++; n += k; } }); return n + ' note(s) across ' + p + ' paper(s)'; })(), function () {
+    exportCard('Notes — TXT', (function () { var n = 0, p = 0; S.refs.forEach(function (r) { var k = (r.notes || []).length; if (k) { p++; n += k; } }); return n + ' note(s) across ' + p + ' paper(s) \u00b7 each with title, authors, journal & DOI'; })(), function () {
       var total = S.refs.reduce(function (a, r) { return a + ((r.notes || []).length); }, 0);
       if (!total) { toast('No notes yet — add them at Stage 2 or in Ask'); return; }
       download(slug() + '_notes.txt', LR.notesTxt(S.refs, S.project.name, new Date().toISOString().slice(0, 10)), 'text/plain');
@@ -3198,29 +3210,28 @@ function viewExport(v) {
     })
   ]);
   v.appendChild(grid);
-  var support = supportSection();
-  if (support) v.appendChild(support);
-}
 
-// ---------- support / "buy me a coffee" ----------
-// Renders nothing at all unless SUPPORT_URL is set. Plain link only:
-// no embedded widget, no remote script, no image, no tracking pixel —
-// the app stays fully offline and self-contained.
-function supportSection() {
-  if (!SUPPORT_URL) return null;
-  var safe = String(SUPPORT_URL);
-  if (!/^https:\/\//i.test(safe)) return null;   // only https links, never inline js
-  return h('div', {}, [
-    h('div', { class: 'divider' }),
-    h('div', { class: 'panel panel-pad', style: 'display:flex;gap:16px;align-items:center;flex-wrap:wrap' }, [
-      h('div', { style: 'flex:1;min-width:260px' }, [
-        h('div', { class: 'mono muted', style: 'font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px', text: 'Support Shodh' }),
-        h('p', { style: 'font-size:13.5px;line-height:1.6;margin:0', text: 'Shodh is free and open source, works entirely offline, and will never ask for an account or a subscription. If it saved you time on a review, you can buy me a coffee.' }),
-        h('p', { class: 'muted', style: 'font-size:12px;margin:8px 0 0', text: 'Completely optional \u2014 every feature stays unlocked either way. Opens in your browser.' })
-      ]),
-      h('a', { class: 'btn primary', href: safe, target: '_blank', rel: 'noopener noreferrer', style: 'text-decoration:none;white-space:nowrap' }, ['\u2615  ' + (SUPPORT_LABEL || 'Buy me a coffee')])
+  // ---- Cite this application ----
+  v.appendChild(h('div', { class: 'mono muted', style: 'font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin:26px 0 12px', text: 'Cite this application' }));
+  v.appendChild(h('div', { class: 'grid g2' }, [
+    exportCard('Cite Shodh \u2014 BibTeX / RIS', 'Software citation for your methods section \u00b7 v' + SHODH_META.version, function () {
+      citeShodhModal();
+    }),
+    h('div', { class: 'panel panel-pad', style: 'display:flex;align-items:center' }, [
+      h('div', { class: 'muted', style: 'font-size:12.5px;line-height:1.6' }, [
+        h('span', { text: 'Using Shodh in a published review? A citation helps others find the tool and supports its continued development.' })
+      ])
     ])
-  ]);
+  ]));
+
+  // ---- Feedback ----
+  v.appendChild(h('div', { class: 'divider' }));
+  v.appendChild(h('div', { style: 'display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:4px 0' }, [
+    h('p', { class: 'muted', style: 'font-size:12.5px;margin:0', text: 'The PRISMA flow diagram and its counts are shown at the top of this tab.' }),
+    h('a', { href: 'https://forms.gle/kdQHmxBqzvoMGsX96', target: '_blank', rel: 'noopener',
+      style: 'font-size:12.5px;color:var(--stamp);white-space:nowrap;text-decoration:none;border:1px solid var(--stamp-soft);border-radius:3px;padding:4px 10px;background:var(--stamp-soft)' },
+      ['\uD83D\uDCAC Found a bug or have a suggestion?'])
+  ]));
 }
 function exportCard(title, sub, onclick) {
   return h('div', { class: 'panel panel-pad', style: 'display:flex;justify-content:space-between;align-items:center;gap:12px' }, [
@@ -3241,7 +3252,10 @@ function exportPNG(out) {
     ctx.drawImage(img, 0, 0);
     URL.revokeObjectURL(url);
     canvas.toBlob(function (blob) {
-      downloadBlob(slug() + '_prisma.png', blob);
+      var u = URL.createObjectURL(blob);
+      var a = h('a', { href: u, download: slug() + '_prisma.png' });
+      document.body.appendChild(a); a.click();
+      setTimeout(function () { document.body.removeChild(a); URL.revokeObjectURL(u); }, 300);
     }, 'image/png');
   };
   img.onerror = function () { URL.revokeObjectURL(url); toast('PNG export failed — use SVG'); };
@@ -3301,11 +3315,130 @@ function boot() {
   }).then(function () {
     ROUTE = 'dashboard';
     render();
-    paintBuildStamp();
-  }).catch(function () { render(); paintBuildStamp(); });
+  }).catch(function () { render(); });
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
 else boot();
+
+
+// ============ Guided walkthrough engine ============
+
+function gwInit(root, onClose) {
+  var chapters = Array.prototype.slice.call(root.querySelectorAll('.chapter'));
+  var chapsEl  = root.querySelector('#gwChaps');
+  var bar      = root.querySelector('#gwBar');
+  var playBtn  = root.querySelector('#gwPlay');
+  var prevBtn  = root.querySelector('#gwPrev');
+  var nextBtn  = root.querySelector('#gwNext');
+  var countEl  = root.querySelector('#gwCount');
+  var steps    = Array.prototype.slice.call(root.querySelectorAll('.fstep'));
+
+  var reduced  = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var idx = 0, playing = !reduced, t0 = 0, elapsed = 0, raf = null;
+
+  // PRISMA funnel values per chapter (illustrative, 1000-record corpus)
+  var FUNNEL = [
+    [0,0,0,0,0],          // 01 create
+    [1000,0,0,0,0],       // 02 import
+    [1000,180,0,0,0],     // 03 duplicates
+    [1000,180,610,0,0],   // 04 stage 1
+    [1000,180,610,0,0],   // 05 conflicts
+    [1000,180,610,140,0], // 06 stage 2
+    [1000,180,610,140,0], // 07 ask
+    [1000,180,610,140,70] // 08 export
+  ];
+
+  function pad(n){ return (n<10?'0':'') + n; }
+
+  // build chapter list
+  chapters.forEach(function (c, i) {
+    var li = document.createElement('li');
+    var b  = document.createElement('button');
+    b.innerHTML = '<span class="num">' + pad(i+1) + '</span><span>' + c.getAttribute('data-title') + '</span>';
+    b.addEventListener('click', function () { go(i); });
+    li.appendChild(b); chapsEl.appendChild(li);
+  });
+  var lis = Array.prototype.slice.call(chapsEl.children);
+
+  function paintFunnel(i) {
+    var vals = FUNNEL[i] || FUNNEL[0];
+    steps.forEach(function (s, k) {
+      var max = parseFloat(s.getAttribute('data-max')) || 1000;
+      var v = vals[k] || 0;
+      s.querySelector('b').textContent = v ? v.toLocaleString() : '0';
+      s.querySelector('.fbar i').style.width = (v / max * 100) + '%';
+    });
+  }
+
+  function go(i) {
+    idx = (i + chapters.length) % chapters.length;
+    chapters.forEach(function (c, k) { c.classList.toggle('on', k === idx); });
+    lis.forEach(function (l, k) { l.classList.toggle('on', k === idx); });
+    countEl.textContent = pad(idx + 1) + ' / ' + pad(chapters.length);
+    paintFunnel(idx);
+    t0 = performance.now();
+    elapsed = 0;
+    bar.style.width = '0%';
+  }
+
+  function dur() {
+    return parseInt(chapters[idx].getAttribute('data-dur'), 10) || 7000;
+  }
+
+  function tick(now) {
+    if (!playing) return;
+    var p = (now - t0) / dur();
+    if (p >= 1) { go(idx + 1); }
+    else { bar.style.width = (p * 100) + '%'; }
+    raf = requestAnimationFrame(tick);
+  }
+
+  function setPlaying(on) {
+    playing = on;
+    playBtn.textContent = on ? '⏸ Pause' : '▶ Play';
+    playBtn.setAttribute('aria-pressed', on ? 'false' : 'true');
+    if (on) {
+      // resume from where we paused rather than restarting the step
+      t0 = performance.now() - elapsed;
+      raf = requestAnimationFrame(tick);
+    } else {
+      elapsed = performance.now() - t0;
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+    }
+  }
+
+  playBtn.addEventListener('click', function () { setPlaying(!playing); });
+  prevBtn.addEventListener('click', function () { go(idx - 1); });
+  nextBtn.addEventListener('click', function () { go(idx + 1); });
+
+  function onKey(e) {
+    if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); if (onClose) onClose(); return; }
+    var handled = true;
+    if (e.key === ' ') { setPlaying(!playing); }
+    else if (e.key === 'ArrowRight') { go(idx + 1); }
+    else if (e.key === 'ArrowLeft')  { go(idx - 1); }
+    else if (/^[1-8]$/.test(e.key))  { go(parseInt(e.key, 10) - 1); }
+    else handled = false;
+    if (handled) { e.preventDefault(); e.stopPropagation(); }
+  }
+  document.addEventListener('keydown', onKey, true);
+
+  // pause when the tab is hidden so the walkthrough doesn't run unseen
+  function onVis() { if (document.hidden && playing) setPlaying(false); }
+  document.addEventListener('visibilitychange', onVis);
+
+  function teardown() {
+    setPlaying(false);
+    document.removeEventListener('keydown', onKey, true);
+    document.removeEventListener('visibilitychange', onVis);
+  }
+
+  go(0);
+  setPlaying(!reduced);
+  if (reduced) bar.style.width = '0%';
+  return teardown;
+}
 
 </script>
 </body>
