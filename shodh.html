@@ -221,6 +221,85 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--paper);border:1px so
 .modal-body{padding:20px}
 .meta-badge{font-family:var(--mono);font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;border:1px solid var(--rule);border-radius:2px;padding:3px 8px;color:var(--muted);background:var(--card)}
 
+
+/* ============== Guided walkthrough (scoped to .gw) ============== */
+.modal.gw-modal{max-width:1060px}
+.gw{font-family:var(--ui);color:var(--ink);line-height:1.6}
+.gw *{box-sizing:border-box}
+.gw .gw-intro p{margin:0 0 18px;color:var(--muted);font-size:14.5px;max-width:66ch}
+.gw .gw-foot{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--rule);font-size:12px;color:var(--muted);line-height:1.6}
+.gw kbd{
+  font-family:var(--mono); font-size:.85em; border:1px solid var(--rule);
+  border-bottom-width:2px; border-radius:var(--r); padding:1px 5px;
+  background:var(--card); white-space:nowrap;
+}.gw .masthead{
+  display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+  padding:22px 20px 14px; max-width:1180px; margin:0 auto;
+}.gw .logo{font-family:var(--serif); font-size:30px; font-weight:600; letter-spacing:-.5px; line-height:1}.gw .logo .dot{color:var(--stamp)}.gw .tagline{font-family:var(--mono); font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:var(--muted)}.gw .verbadge{
+  font-family:var(--mono); font-size:10px; color:var(--stamp); background:var(--stamp-soft);
+  border:1px solid var(--rule); border-radius:999px; padding:2px 8px; white-space:nowrap;
+}.gw .wrap{max-width:1180px; margin:0 auto; padding:0 20px 80px}.gw .intro{
+  border-top:1px solid var(--rule); border-bottom:1px solid var(--rule);
+  padding:26px 0 24px; margin-bottom:26px;
+}.gw .intro h1{
+  font-family:var(--serif); font-size:clamp(28px,4vw,42px); font-weight:600;
+  line-height:1.15; margin:0 0 12px; letter-spacing:-.4px;
+}.gw .intro p{margin:0; max-width:64ch; color:var(--muted); font-size:16px}.gw .stage{display:grid; grid-template-columns:minmax(0,1fr) 260px; gap:26px; align-items:start}@media(max-width:900px){.gw .stage{grid-template-columns:minmax(0,1fr)}}.gw .player{
+  background:var(--card); border:1px solid var(--rule); border-radius:var(--r);
+  box-shadow:0 1px 0 var(--rule),0 2px 10px rgba(34,38,31,.05); overflow:hidden;
+}.gw .screen{position:relative; min-height:430px; padding:26px 28px 22px}@media(max-width:600px){.gw .screen{padding:20px 18px 18px; min-height:400px}}.gw .eyebrow{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--stamp); margin-bottom:10px; display:flex; align-items:center; gap:9px;
+}.gw .eyebrow .n{
+  background:var(--stamp); color:#fff; border-radius:2px; padding:1px 6px;
+  font-size:10px; letter-spacing:1px;
+}.gw .screen h2{
+  font-family:var(--serif); font-size:26px; font-weight:600; margin:0 0 8px; letter-spacing:-.2px;
+}.gw .screen .lede{color:var(--muted); margin:0 0 18px; max-width:58ch; font-size:14.5px}.gw .chapter{display:none}.gw .chapter.on{display:block; animation:gw-fade .45s ease both}@keyframes gw-fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}.gw .mock{
+  border:1px solid var(--rule-2); border-radius:var(--r); background:var(--paper);
+  padding:14px; font-size:13px;
+}.gw .mock-bar{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px}.gw .mock-tab{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:1.2px; text-transform:uppercase;
+  padding:4px 8px; border:1px solid transparent; border-radius:2px; color:var(--muted);
+}.gw .mock-tab.on{background:var(--card); border-color:var(--rule); color:var(--ink); font-weight:600}.gw .rec{
+  background:var(--card); border:1px solid var(--rule); border-radius:var(--r);
+  padding:12px 14px; margin-bottom:8px;
+}.gw .rec-t{font-family:var(--serif); font-size:15px; line-height:1.35; margin-bottom:4px}.gw .rec-m{font-size:11.5px; color:var(--muted); font-family:var(--mono)}.gw .pill{
+  display:inline-block; font-family:var(--mono); font-size:10px; letter-spacing:.6px;
+  padding:2px 7px; border-radius:999px; text-transform:uppercase;
+}.gw .pill.inc{background:var(--inc-soft); color:var(--inc)}.gw .pill.exc{background:var(--exc-soft); color:var(--exc)}.gw .pill.may{background:var(--may-soft); color:var(--may)}.gw .pill.dup{background:var(--stamp-soft); color:var(--stamp)}.gw .keyrow{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; align-items:center}.gw .act{
+  flex:1; min-width:96px; text-align:center; padding:9px 8px; border-radius:var(--r);
+  border:1px solid var(--rule); background:var(--card); font-size:12.5px; font-weight:600;
+}.gw .act.inc{border-color:var(--inc); color:var(--inc)}.gw .act.exc{border-color:var(--exc); color:var(--exc)}.gw .act.may{border-color:var(--may); color:var(--may)}.gw .act .k{display:block; font-family:var(--mono); font-size:10px; font-weight:400; color:var(--muted); margin-top:2px}.gw .note{
+  border-left:2px solid var(--stamp); background:var(--stamp-soft);
+  padding:10px 14px; margin-top:16px; font-size:13px; border-radius:0 var(--r) var(--r) 0;
+}.gw .note b{font-weight:600}.gw .warn{border-left-color:var(--may); background:var(--may-soft)}.gw .two{display:grid; grid-template-columns:1fr 1fr; gap:10px}@media(max-width:600px){.gw .two{grid-template-columns:1fr}}.gw .transport{
+  border-top:1px solid var(--rule); padding:12px 16px;
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:var(--card);
+}.gw .btn{
+  font-family:var(--ui); font-size:13px; padding:7px 14px; border-radius:var(--r);
+  border:1px solid var(--rule); background:var(--card); color:var(--ink); cursor:pointer;
+}.gw .btn:hover{border-color:var(--stamp); color:var(--stamp)}.gw .btn:focus-visible{outline:2px solid var(--stamp); outline-offset:2px}.gw .btn.primary{background:var(--stamp); border-color:var(--stamp); color:#fff; font-weight:600}.gw .btn.primary:hover{opacity:.9; color:#fff}.gw .btn[disabled]{opacity:.4; cursor:default}.gw .btn[disabled]:hover{border-color:var(--rule); color:var(--ink)}.gw .counter{font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-left:auto}.gw .progress{height:3px; background:var(--rule-2); position:relative; overflow:hidden}.gw .progress i{
+  position:absolute; inset:0 auto 0 0; background:var(--stamp); width:0;
+  transition:width .25s linear;
+}.gw .side{display:flex; flex-direction:column; gap:18px; position:sticky; top:18px}@media(max-width:900px){.gw .side{position:static}}.gw .side h3{
+  font-family:var(--mono); font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--muted); margin:0 0 9px; font-weight:400;
+}.gw .chaplist{list-style:none; margin:0; padding:0; border-top:1px solid var(--rule)}.gw .chaplist li{border-bottom:1px solid var(--rule-2)}.gw .chaplist button{
+  width:100%; text-align:left; background:none; border:0; padding:8px 4px; cursor:pointer;
+  font-family:var(--ui); font-size:13px; color:var(--muted); display:flex; gap:9px; align-items:baseline;
+}.gw .chaplist button:hover{color:var(--stamp)}.gw .chaplist button:focus-visible{outline:2px solid var(--stamp); outline-offset:-2px}.gw .chaplist li.on button{color:var(--ink); font-weight:600}.gw .chaplist li.on button .num{color:var(--stamp)}.gw .chaplist .num{font-family:var(--mono); font-size:10.5px; color:var(--rule); min-width:16px}.gw .funnel{
+  background:var(--card); border:1px solid var(--rule); border-radius:var(--r); padding:14px;
+}.gw .fstep{margin-bottom:9px}.gw .fstep:last-child{margin-bottom:0}.gw .flabel{
+  display:flex; justify-content:space-between; align-items:baseline; gap:8px;
+  font-size:11.5px; color:var(--muted); margin-bottom:3px;
+}.gw .flabel b{font-family:var(--mono); font-size:12.5px; color:var(--ink); font-weight:600}.gw .fbar{height:6px; background:var(--rule-2); border-radius:999px; overflow:hidden}.gw .fbar i{
+  display:block; height:100%; width:0; background:var(--stamp); border-radius:999px;
+  transition:width .6s cubic-bezier(.4,0,.2,1);
+}.gw .fstep.excluded .fbar i{background:var(--exc)}.gw .fstep.final .fbar i{background:var(--inc)}.gw .fnote{font-size:11px; color:var(--muted); margin-top:10px; line-height:1.45}.gw footer{
+  max-width:1180px; margin:0 auto; padding:24px 20px 60px; border-top:1px solid var(--rule);
+  color:var(--muted); font-size:12.5px; line-height:1.6;
+}.gw footer code{font-family:var(--mono); font-size:.92em}@media(prefers-reduced-motion:reduce){}@media print{.gw .transport, .gw .side, .gw .progress{display:none}.gw .chapter{display:block !important; page-break-inside:avoid; margin-bottom:30px}}
 </style>
 <meta name="shodh-build" content="1.1.0">
 <meta name="shodh-version" content="1.1.0">
@@ -1265,7 +1344,7 @@ function createProject(fields, onDone) {
   S.projectId = id;
   S.project = { name: fields.name, question: fields.question, type: fields.type, domain: fields.domain, createdAt: Date.now() };
   S.refs = [];
-  S.reviewers = [{ id: 'rev1', name: fields.reviewer || 'Reviewer 1' }];
+  S.reviewers = [{ id: 'rev1', name: fields.reviewer || 'Reviewer' }];
   S.activeReviewer = 'rev1';
   S.settings = { required: 1, llm: keepLlm };
   resetTransientState();
@@ -1450,13 +1529,27 @@ function render() {
 }
 
 // ================= DASHBOARD =================
+function restoreCard() {
+  var inp = h('input', { type: 'file', accept: '.json,application/json' });
+  inp.addEventListener('change', function (e) {
+    var f = e.target.files && e.target.files[0];
+    if (f) restoreFromJSON(f);
+    inp.value = '';
+  });
+  return h('div', { class: 'field', style: 'margin-top:18px;max-width:640px' }, [
+    h('label', { text: 'Restore a review from backup (.json)' }),
+    inp,
+    h('p', { class: 'muted', style: 'font-size:12px;margin:8px 0 0', text: 'Creates a new review from an Export-tab JSON backup. Use this to move your library between browsers, machines, or into the Shodh window app. PDFs are not inside JSON backups \u2014 re-attach them where needed.' })
+  ]);
+}
 function viewDashboard(v) {
   // first run: no reviews at all -> creation form
   if (!S.project && PROJECTS.length === 0) {
     v.appendChild(h('h2', { class: 'section', text: 'Start your first review' }));
     v.appendChild(h('p', { class: 'lede', text: 'Name the review and state the question it answers. You can create as many separate reviews as you like — each keeps its own records, decisions, and PDFs.' }));
     v.appendChild(createReviewForm(null));
-    v.appendChild(h('p', { class: 'muted', style: 'margin-top:14px;font-size:13px', text: 'The demo dataset is 9 synthetic records (clearly labelled, not real papers) with planted duplicates so you can try the whole workflow immediately.' }));
+    v.appendChild(restoreCard());
+    v.appendChild(h('div', { style: 'margin-top:16px' }, [guideButton()]));
     return;
   }
 
@@ -1467,6 +1560,8 @@ function viewDashboard(v) {
     h('button', { class: 'btn sm primary', style: 'margin-left:auto', onclick: newReviewModal }, ['＋ New review'])
   ]));
   v.appendChild(reviewsList());
+
+  v.appendChild(restoreCard());
 
   if (S.project) {
     v.appendChild(h('div', { class: 'divider' }));
@@ -1499,8 +1594,8 @@ function reviewsList() {
 }
 
 function createReviewForm(onDone) {
-  var name = h('input', { placeholder: 'e.g. Tool wear prediction in dry turning of stainless steels', maxlength: '160' });
-  var q = h('textarea', { rows: '3', placeholder: 'e.g. Which signal-based methods predict flank wear in dry turning of austenitic stainless steels?' });
+  var name = h('input', { placeholder: 'e.g. Title of your research topic', maxlength: '160' });
+  var q = h('textarea', { rows: '3', placeholder: 'e.g. What evidence are you trying to identify or compare?' });
   var revIn = h('input', { placeholder: 'Your name — recorded on every decision you make', maxlength: '60' });
   var typeSel = selEl(REVIEW_TYPES.map(function (t) { return [t, t]; }), 'Systematic Review', function () {});
   var domSel = selEl(REVIEW_DOMAINS.map(function (d) { return [d, d]; }), 'Not Applicable', function () {});
@@ -1516,8 +1611,8 @@ function createReviewForm(onDone) {
       h('div', { class: 'field' }, [h('label', { text: 'Review type' }), typeSel]),
       h('div', { class: 'field' }, [h('label', { text: 'Review domain' }), domSel])
     ]),
-    h('div', { class: 'field' }, [h('label', { text: 'Reviewer 1 (you)' }), revIn]),
-    h('div', { class: 'inline-actions' }, [start, onDone ? null : h('button', { class: 'btn ghost', onclick: loadSampleProject }, ['Load demo dataset'])])
+    h('div', { class: 'field' }, [h('label', { text: 'Reviewer Name' }), revIn]),
+    h('div', { class: 'inline-actions' }, [start])
   ];
   return h('div', { class: onDone ? '' : 'panel panel-pad', style: onDone ? '' : 'max-width:640px' }, kids);
 }
@@ -1699,20 +1794,6 @@ function selEl(pairs, current, onchange) {
   });
   return s;
 }
-function loadSampleProject() {
-  S.projectId = newProjectId();
-  S.project = { name: 'Demo — signal-based tool wear & machining review', question: 'Which signal-based methods predict tool wear or surface quality in machining of difficult-to-cut materials?', type: 'Systematic Review', domain: 'Mechanical / Manufacturing', createdAt: Date.now() };
-  S.refs = LR.sampleRefs();
-  S.reviewers = [{ id: 'rev1', name: 'Reviewer 1' }, { id: 'rev2', name: 'Reviewer 2' }];
-  S.activeReviewer = 'rev1';
-  S.settings = { required: 2, llm: (S.settings && S.settings.llm) ? S.settings.llm : { url: 'http://localhost:11434', model: '', enabled: false } };
-  resetTransientState();
-  markDuplicatesAuto();
-  recomputeVerdicts(); persist();
-  refreshProjects().then(function () { go('dedupe'); });
-  toast('Demo dataset loaded — 9 synthetic records');
-}
-
 // ================= IMPORT =================
 function viewImport(v) {
   if (!S.project) { requireProject(v); return; }
@@ -1743,22 +1824,6 @@ function viewImport(v) {
       ta.value = ''; afterIngest(added, status);
     } }, ['Parse pasted text'])])]));
 
-  // restore from backup
-  v.appendChild(h('div', { class: 'field', style: 'margin-top:18px' }, [
-    h('label', { text: 'Restore a Shodh backup (.json)' }),
-    (function () {
-      var inp = h('input', { type: 'file', accept: '.json,application/json' });
-      inp.addEventListener('change', function (e) {
-        var f = e.target.files[0]; if (!f) return;
-        var rd = new FileReader();
-        rd.onload = function () { restoreFromJSON(rd.result); };
-        rd.readAsText(f);
-        e.target.value = '';
-      });
-      return inp;
-    })(),
-    h('p', { class: 'muted', style: 'font-size:12px;margin-top:6px', text: 'Creates a new review from an Export-tab JSON backup. Use this to move your library between browsers, machines, or into the Shodh window app. PDFs are not inside JSON backups \u2014 re-attach them where needed.' })
-  ]));
 
   var c = LR.prismaCounts(S.refs);
   v.appendChild(h('div', { class: 'callout', style: 'margin-top:20px', html: '<b>' + c.identified + '</b> records currently in this review (' + c.dups + ' flagged as duplicates). Re-importing the same file is safe — deduplication will catch overlaps.' }));
@@ -1811,7 +1876,26 @@ function afterIngest(added, status) {
   status.classList.remove('hidden');
   finishImport(added, [], status);
 }
-function restoreFromJSON(text) {
+function restoreFromJSON(input) {
+  // Accept either a File/Blob (from a file picker) or a JSON string.
+  if (input && typeof input.text === 'function') {
+    input.text().then(function (txt) { restoreFromJSON(txt); })
+      .catch(function () {
+        var rd = new FileReader();
+        rd.onload = function () { restoreFromJSON(String(rd.result)); };
+        rd.onerror = function () { toast('Could not read that file'); };
+        rd.readAsText(input);
+      });
+    return;
+  }
+  if (input && typeof FileReader !== 'undefined' && (input instanceof Blob)) {
+    var reader = new FileReader();
+    reader.onload = function () { restoreFromJSON(String(reader.result)); };
+    reader.onerror = function () { toast('Could not read that file'); };
+    reader.readAsText(input);
+    return;
+  }
+  var text = input;
   var d;
   try { d = JSON.parse(text); } catch (e) { toast('That file is not valid JSON'); return; }
   if (!d || !d.project || !Array.isArray(d.refs)) { toast('Not a Shodh backup (needs project + refs)'); return; }
@@ -1820,7 +1904,7 @@ function restoreFromJSON(text) {
   S.projectId = newProjectId();
   S.project = d.project;
   S.refs = d.refs;
-  S.reviewers = (d.reviewers && d.reviewers.length) ? d.reviewers : [{ id: 'rev1', name: 'Reviewer 1' }];
+  S.reviewers = (d.reviewers && d.reviewers.length) ? d.reviewers : [{ id: 'rev1', name: 'Reviewer' }];
   S.activeReviewer = S.reviewers[0].id;
   S.settings = d.settings || { required: 1 };
   if (!S.settings.llm) S.settings.llm = keepLlm;
@@ -2411,7 +2495,12 @@ function openNoteModal(r, quote, sourceLabel) {
 }
 function addNote(r, text, quote, sourceLabel) {
   if (!r.notes) r.notes = [];
-  r.notes.push({ id: LR.uid(), text: text || '', quote: quote || '', source: sourceLabel || '', by: S.activeReviewer, at: Date.now() });
+  // If the user kept the pre-filled selection verbatim (text === quote),
+  // store it once as the note text and drop the duplicate quote.
+  var t = text || '';
+  var qq = quote || '';
+  if (qq && t.trim() === qq.trim()) qq = '';
+  r.notes.push({ id: LR.uid(), text: t, quote: qq, source: sourceLabel || '', by: S.activeReviewer, at: Date.now() });
   persist(); render();
 }
 // floating "+ Note" button on text selection (Stage 2 card + Ask source pane)
