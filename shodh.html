@@ -992,31 +992,36 @@ var LR = (function () {
 
   // ---------- notes export ----------
   function notesTxt(refs, projectName, dateStr) {
-    var withNotes = (refs || []).filter(function (r) { return r.notes && r.notes.length; })
-      .sort(function (a, b) { return a.title < b.title ? -1 : a.title > b.title ? 1 : 0; });
+    // Flatten every note across all papers, then order by the sequence in which
+    // they were saved (falling back to timestamp for notes made before seq existed),
+    // so the export reads 1, 2, 3 in creation order and is easy to track.
+    var flat = [];
+    (refs || []).forEach(function (r) {
+      (r.notes || []).forEach(function (n) { flat.push({ ref: r, note: n }); });
+    });
+    flat.sort(function (a, b) {
+      var sa = (typeof a.note.seq === 'number') ? a.note.seq : (a.note.at || 0);
+      var sb = (typeof b.note.seq === 'number') ? b.note.seq : (b.note.at || 0);
+      return sa - sb;
+    });
     var L = [];
     L.push('SHODH NOTES \u2014 ' + (projectName || 'review'));
     L.push('Exported ' + (dateStr || ''));
-    L.push('Papers with notes: ' + withNotes.length);
+    L.push('Notes: ' + flat.length + ' (in the order they were made)');
     L.push(new Array(61).join('='));
-    withNotes.forEach(function (r, i) {
+    flat.forEach(function (item, i) {
+      var r = item.ref, n = item.note;
       L.push('');
-      L.push('[' + (i + 1) + '] ' + r.title);
-      var meta = [];
-      if (r.authors && r.authors.length) meta.push(r.authors.join('; '));
-      if (r.year) meta.push(r.year);
-      if (r.journal) meta.push(r.journal);
-      if (meta.length) L.push('    ' + meta.join(' \u00b7 '));
-      if (r.doi) L.push('    doi ' + r.doi);
-      (r.notes || []).forEach(function (n) {
-        L.push('');
-        L.push('  * ' + (n.text || '(highlight only)'));
-        if (n.quote) L.push('    > "' + n.quote + '"');
-        var tail = [];
-        if (n.source) tail.push(n.source);
-        if (n.at) tail.push(new Date(n.at).toISOString().slice(0, 10));
-        if (tail.length) L.push('    \u2014 ' + tail.join(', '));
-      });
+      L.push('[' + (i + 1) + '] ' + (n.text || '(highlight only)'));
+      if (n.quote) L.push('    > "' + n.quote + '"');
+      var src = [];
+      if (r.title) src.push(r.title);
+      if (r.year) src.push(r.year);
+      if (src.length) L.push('    on: ' + src.join(' \u00b7 '));
+      var tail = [];
+      if (n.source) tail.push(n.source);
+      if (n.at) tail.push(new Date(n.at).toISOString().slice(0, 10));
+      if (tail.length) L.push('    \u2014 ' + tail.join(', '));
     });
     L.push('');
     return L.join('\n');
@@ -2493,6 +2498,14 @@ function openNoteModal(r, quote, sourceLabel) {
     catch (e) {}
   }, 0);
 }
+function nextNoteSeq() {
+  // Highest existing note sequence across the whole project, + 1.
+  var max = 0;
+  (S.refs || []).forEach(function (r) {
+    (r.notes || []).forEach(function (n) { if (typeof n.seq === 'number' && n.seq > max) max = n.seq; });
+  });
+  return max + 1;
+}
 function addNote(r, text, quote, sourceLabel) {
   if (!r.notes) r.notes = [];
   // If the user kept the pre-filled selection verbatim (text === quote),
@@ -2500,7 +2513,7 @@ function addNote(r, text, quote, sourceLabel) {
   var t = text || '';
   var qq = quote || '';
   if (qq && t.trim() === qq.trim()) qq = '';
-  r.notes.push({ id: LR.uid(), text: t, quote: qq, source: sourceLabel || '', by: S.activeReviewer, at: Date.now() });
+  r.notes.push({ id: LR.uid(), seq: nextNoteSeq(), text: t, quote: qq, source: sourceLabel || '', by: S.activeReviewer, at: Date.now() });
   persist(); render();
 }
 // floating "+ Note" button on text selection (Stage 2 card + Ask source pane)
@@ -2553,13 +2566,14 @@ document.addEventListener('mouseup', function () {
         style: 'position:fixed;z-index:9999;left:' + bLeft + 'px;top:' + bTop + 'px;'
              + 'min-width:104px;padding:5px 12px;font-size:12px;font-weight:600;'
              + 'box-shadow:0 3px 10px rgba(0,0,0,.28);border-radius:4px;white-space:nowrap',
+        onmousedown: function (ev) { ev.preventDefault(); },
         onclick: function () { hideSelBtn(); openNoteModal(info.ref, q, info.label); }
       }, ['+ Note']);
       document.body.appendChild(_selBtn);
     } catch (e) {}
   }, 10);
 });
-document.addEventListener('mousedown', function (e) { if (_selBtn && e.target !== _selBtn) hideSelBtn(); });
+document.addEventListener('mousedown', function (e) { if (_selBtn && e.target !== _selBtn && !_selBtn.contains(e.target)) hideSelBtn(); });
 document.addEventListener('scroll', hideSelBtn, true);
 
 function ruleBox(comp) {
@@ -3113,13 +3127,7 @@ function stopShodhServer() {
     }).catch(function () { toast('No Shodh app server detected for this page'); });
   } catch (e) { toast('No Shodh app server detected for this page'); }
 }
-function renderChat(container) {
-  container.innerHTML = '';
-  if (!ASK.messages.length) {
-    container.appendChild(h('div', { class: 'src-empty', style: 'border:1px dashed var(--rule);border-radius:3px', text: 'Results appear here, grounded in your records with clickable sources.' }));
-    return;
-  }
-  ASK.messages.forEach(function (m) {
+function renderMessage(container, m) {
     if (m.role === 'user') {
       container.appendChild(h('div', { class: 'msg user' }, [h('div', { class: 'who', text: 'You' }), h('div', { class: 'body', text: m.text })]));
       return;
@@ -3153,6 +3161,28 @@ function renderChat(container) {
       card.appendChild(list);
     }
     container.appendChild(card);
+}
+
+function renderChat(container) {
+  container.innerHTML = '';
+  if (!ASK.messages.length) {
+    container.appendChild(h('div', { class: 'src-empty', style: 'border:1px dashed var(--rule);border-radius:3px', text: 'Results appear here, grounded in your records with clickable sources.' }));
+    return;
+  }
+  // Group messages into question -> answer pairs, then show newest pair first
+  // so the latest question and its answer sit at the top without scrolling.
+  var pairs = [];
+  var cur = null;
+  ASK.messages.forEach(function (m) {
+    if (m.role === 'user') { cur = { q: m, a: [] }; pairs.push(cur); }
+    else if (cur) { cur.a.push(m); }
+    else { cur = { q: null, a: [m] }; pairs.push(cur); }
+  });
+  pairs.reverse(); // newest first
+  pairs.forEach(function (p, idx) {
+    if (idx > 0) container.appendChild(h('div', { style: 'border-top:1px solid var(--rule);margin:6px 0 4px' }));
+    if (p.q) renderMessage(container, p.q);
+    p.a.forEach(function (am) { renderMessage(container, am); });
   });
 }
 function renderAnswerWithCites(container, text, sources) {
